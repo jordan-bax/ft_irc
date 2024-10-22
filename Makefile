@@ -1,47 +1,56 @@
 
-all:
+VPATH= preset : classes 
 
-f:
-	@$(MAKE) -C ex00 fclean --no-print-directory
-	@$(MAKE) -C ex01 fclean --no-print-directory
-	@$(MAKE) -C ex02 fclean --no-print-directory
-	@$(MAKE) -C ex03 fclean --no-print-directory
-	# rm  ex02/*.txt ex03/*.txt
-	
-0:
-	$(MAKE) -C ex00 --no-print-directory
-0r:
-	$(MAKE) -C ex00 r --no-print-directory
-0re:
-	$(MAKE) -C ex00 re --no-print-directory
-0f:
-	$(MAKE) -C ex00 fclean --no-print-directory
+NAME= irc_server
 
-1:
-	$(MAKE) -C ex01 --no-print-directory
-1r:
-	$(MAKE) -C ex01 r --no-print-directory
-1re:
-	$(MAKE) -C ex01 re --no-print-directory
-1f:
-	$(MAKE) -C ex01 fclean --no-print-directory
-2v:
-	$(MAKE) -C ex02 --no-print-directory vgrind
-2:
-	$(MAKE) -C ex02 --no-print-directory
-2r:
-	$(MAKE) -C ex02 r --no-print-directory
-2re:
-	$(MAKE) -C ex02 re --no-print-directory
-2f:
-	$(MAKE) -C ex02 fclean --no-print-directory
-3:
-	$(MAKE) -C ex03 --no-print-directory
-3v:
-	$(MAKE) -C ex03 vgrind --no-print-directory
-3r:
-	$(MAKE) -C ex03 r --no-print-directory
-3re:
-	$(MAKE) -C ex03 re --no-print-directory
-3f:
-	$(MAKE) -C ex03 fclean --no-print-directory
+SRC= main.cpp init_env.cpp clean_fd.cpp get_opt.cpp x.cpp main_loop.cpp \
+	init_fd.cpp do_select.cpp check_fd.cpp \
+	srv_create.cpp srv_accept.cpp \
+	client_read.cpp client_write.cpp
+
+SRC+= User_data.cpp
+
+OBF_DIR= OBF
+
+OBF= $(SRC:%.cpp=$(OBF_DIR)/%.o)
+
+HEADER= bircd.h User_data.hpp
+
+CC= c++
+
+val = -ggdb3
+CPPFLAGS +=	-Wall -Werror -Wextra
+CPPFLAGS += -g $(val)
+CPPFLAGS +=	-std=c++98
+
+SAN= -fsanitize=address
+
+OO= -O3
+
+all: $(NAME)
+
+$(NAME): $(OBF_DIR) $(OBF)
+	$(CC) $(CFLAGS) -o $@ $(OBF) $(RLINE) 
+
+$(OBF_DIR)/%o: %cpp $(HEADER)
+	$(CC) -c $(CFLAGS) -o $@ $< 
+
+$(OBF_DIR):
+	mkdir $(OBF_DIR)
+
+clean:
+	@rm -rf $(OBF) $(OBF_DIR)
+
+fclean:
+	@rm -rf $(OBF) $(OBF_DIR) $(NAME)
+
+f: fclean
+
+r:$(NAME)
+	./$(NAME) 8080
+re:
+	@$(MAKE) fclean
+	@$(MAKE) all
+
+
+.PHONY: all re fclean clean f r
