@@ -4,7 +4,7 @@
 
 void	client_write(t_env *e, int cs)
 {
-	send(cs, e->fds[cs].buf_write, strlen(e->fds[cs].buf_write), 0);
-	e->fds[cs].buf_write[0] ='\0';
+	send(cs, e->fds[cs].buf_write.c_str(), e->fds[cs].buf_write.length(), 0);
+	e->fds[cs].buf_write.clear();
 
 }

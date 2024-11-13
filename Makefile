@@ -1,27 +1,33 @@
 
-VPATH= preset : classes 
+VPATH= preset : classes : other
 
 NAME= irc_server
+
+CLASSES+= connection client server
 
 SRC= main.cpp init_env.cpp clean_fd.cpp get_opt.cpp x.cpp main_loop.cpp \
 	init_fd.cpp do_select.cpp check_fd.cpp \
 	srv_create.cpp srv_accept.cpp \
 	client_read.cpp client_write.cpp
 
-SRC+= User_data.cpp
+SRC+= User_data.cpp signals.cpp srv_read.cpp
+SRC+= $(CLASSES:%=%.cpp)
 
 OBF_DIR= OBF
 
 OBF= $(SRC:%.cpp=$(OBF_DIR)/%.o)
 
-HEADER= bircd.h User_data.hpp
-
+HEADER= bircd.h User_data.hpp signal.hpp
+HEADER= $(CLASSES:%=%.hpp)
 CC= c++
 
 val = -ggdb3
+VALOPT = --leak-check=full
+VALOPT += --show-leak-kinds=all
 CPPFLAGS +=	-Wall -Werror -Wextra
 CPPFLAGS += -g $(val)
-CPPFLAGS +=	-std=c++98
+PORT= 8000
+# CPPFLAGS +=	-std=c++98
 
 SAN= -fsanitize=address
 
@@ -45,12 +51,15 @@ fclean:
 	@rm -rf $(OBF) $(OBF_DIR) $(NAME)
 
 f: fclean
+ 
+v:$(NAME)
+	valgrind $(VALOPT) ./$(NAME) $(PORT)
 
 r:$(NAME)
-	./$(NAME) 8080
+	./$(NAME) $(PORT)
 re:
 	@$(MAKE) fclean
 	@$(MAKE) all
 
 
-.PHONY: all re fclean clean f r
+.PHONY: all re fclean clean f r v

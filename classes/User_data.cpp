@@ -1,17 +1,17 @@
 #include "User_data.hpp"
 
 User_data::User_data() : _fd(-1) ,_full_name("unkown"),_nick_name("unkown"), _password("") {
-	std::cout << "test\n";
+	std::cout << "new user [" << _fd << "]\n";
 }
 User_data::User_data( int fd ) : _fd(fd) ,_full_name("unkown"),_nick_name("unkown"), _password("") {
-	std::cout << "test\n";
+	std::cout << "new user [" << _fd << "]\n";
 }
 User_data::User_data( User_data const & src ) {
 	*this = src;
 }
 User_data::~User_data() {
 	
-	std::cout << "n test\n";
+	std::cout << "delete user [" << _fd << "]\n";
 }
 
 User_data & User_data::operator=( User_data const & rhs ) {

@@ -2,7 +2,10 @@
 # define BIRCD_H_
 
 # include <sys/select.h>
+# include <vector>
 # include "../classes/User_data.hpp"
+# include "../classes/connection.hpp"
+# include "../mycolor.hpp"
 
 # define FD_FREE	0
 # define FD_SERV	1
@@ -16,7 +19,9 @@
 
 # define USAGE		"Usage: %s port\n"
 # define WELCOME  "Welcome rules \n"
+# define NO_NAME  "Anonymous\n"
 
+class connection;
 struct s_env;
 typedef struct	s_fd
 {
@@ -24,12 +29,13 @@ typedef struct	s_fd
   User_data *user;
   void	(*fct_read)(s_env*, int); // = client read
   void	(*fct_write)(s_env* , int); // = client write
-  char	buf_read[BUF_SIZE + 1];
-  char	buf_write[BUF_SIZE + 1];
+  std::string	buf_read;
+  std::string	buf_write;
 }		t_fd;
 
 typedef struct	s_env
 {
+  std::vector<connection*> connections;
   t_fd		*fds; // malloc * maxfd
   int		port; // the port to lissen
   int		maxfd; // set resource soft limits
@@ -65,5 +71,7 @@ void	init_fd(t_env *e);
 void	do_select(t_env *e);
 // ?? check the fd struct and uses the fucntions
 void	check_fd(t_env *e);
+
+void	srv_read(t_env *e, int cs);
 
 #endif /* !BIRCD_H_ */

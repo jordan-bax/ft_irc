@@ -37,5 +37,5 @@ void			srv_accept(t_env *e, int s)
   e->fds[cs].fct_read = client_read;
   e->fds[cs].fct_write = client_write;
   e->fds[cs].user = new User_data(cs);
-  ft_memcpy(e->fds[cs].buf_write, WELCOME,strlen(WELCOME));
+  e->fds[cs].buf_write = WELCOME;
 }
