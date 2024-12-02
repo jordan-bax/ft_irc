@@ -23,9 +23,9 @@ void			srv_create(t_env *e, int port)
   e->fds[s].fct_read = srv_accept;
   e->fds[0].fct_read = srv_read;
   e->connections.push_back(new server(FD_SERV, s));
-  e->connections.push_back(new server(FD_SERV, s));
-  e->connections.push_back(new server(FD_SERV, s));
-  free(e->fds);
-  connection::clear(e->connections);
-  exit(0);
+  // e->connections.push_back(new server(FD_SERV, s));
+  // e->connections.push_back(new server(FD_SERV, s));
+  // free(e->fds);
+  // connection::clear(e->connections);
+  // exit(0);
 }
