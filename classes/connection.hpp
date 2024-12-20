@@ -21,7 +21,7 @@ public:
 	virtual ~connection();
 
 	// connection & operator=( connection const & rhs );
-	static std::vector<connection*>::const_iterator find(std::vector<connection*>::const_iterator start, std::vector<connection*>::const_iterator end, int fd)
+	static std::vector<connection*>::iterator find(std::vector<connection*>::iterator start, std::vector<connection*>::iterator end, int fd)
 	{
 		while (start != end)
 		{
@@ -44,7 +44,7 @@ public:
 	std::string		get_bufwrite()const{return buf_write;};
 	int		get_fd()const{return _fd;};
 	int		get_type()const{return _type;};
-	virtual void	read(s_env *env) = 0;
+	virtual bool	read(s_env *env) = 0;
 	virtual void	write(void) = 0;
 };
 

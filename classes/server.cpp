@@ -21,7 +21,7 @@ void	server::write(void) {
 	std::cout << "server write test [" << _fd << "]\n";
 
 }
-void	server::read(s_env *env) {
+bool	server::read(s_env *env) {
 	int			cs;
 	struct sockaddr_in	csin;
 	socklen_t		csin_len;
@@ -39,6 +39,7 @@ void	server::read(s_env *env) {
 	// e->fds[cs].fct_write = client_write;
 	// e->fds[cs].user = new User_data(cs);
 	// e->fds[cs].buf_write = WELCOME;
+	return true;
 }
 
 // server & server::operator=( server const & rhs ) {

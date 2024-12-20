@@ -36,7 +36,7 @@ typedef struct	s_fd
 typedef struct	s_env
 {
   std::vector<connection*> connections;
-  t_fd		*fds; // malloc * maxfd
+  // t_fd		*fds; // malloc * maxfd
   int		port; // the port to lissen
   int		maxfd; // set resource soft limits
   int		max;
@@ -58,7 +58,7 @@ void	srv_accept(t_env *e, int s);
 void	client_read(t_env *e, int cs);
 void	client_write(t_env *e, int cs);
 // null all t_fd
-void	clean_fd(t_fd *fd);
+// void	clean_fd(t_fd *fd);
 // checks err == res true > gives error message and exits
 int	  x_int(int err, int res, char *str, char *file, int line);
 // checks err == res true > gives error message and exits

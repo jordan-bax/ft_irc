@@ -20,7 +20,7 @@ void functionC() {
 }
 
 // Constant global map with string keys and function pointers as values
-const std::unordered_map<std::string, FunctionPtr> functionMap = {
+static const std::unordered_map<std::string, FunctionPtr> functionMap = {
     {"A", functionA},
     {"B", functionB},
     {"C", functionC}

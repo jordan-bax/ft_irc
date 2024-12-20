@@ -8,42 +8,56 @@
 #define PROXY_PORT 9090
 #define BUFFER_SIZE 1024
 
-void handle_connection(int client_socket, int server_socket) {
+bool    nonblocking_read(int read_socket, int send_socket, std::string message)
+{
     char buffer[BUFFER_SIZE] = {0};
 
+    memset(buffer, 0, BUFFER_SIZE);
+    int bytes_read = read(read_socket, buffer, BUFFER_SIZE);
+    if (bytes_read <= 0) {
+        std::cout << "Client disconnected" << std::endl;
+        return true;
+    }
+    std::cout << message << buffer;
+
+    // Forward data to the server
+    send(send_socket, buffer, bytes_read, 0);
+    return false;
+}
+int max(int a, int b){
+    return a>b? a : b;
+}
+void handle_connection(int client_socket, int server_socket) {
+
+    int     return_val;
+    fd_set	fd_read;
     // Proxy communication loop
-    while (true) {
-        // Receive data from client
-        memset(buffer, 0, BUFFER_SIZE);
-        int bytes_read = read(client_socket, buffer, BUFFER_SIZE);
-        if (bytes_read <= 0) {
-            std::cout << "Client disconnected" << std::endl;
-            break;
+    while (true)
+    {
+        FD_ZERO(&fd_read);
+        FD_SET(client_socket,&fd_read);
+        FD_SET(server_socket,&fd_read);
+        return_val = select(max(client_socket,server_socket) +1, &fd_read, NULL, NULL, NULL);
+        if (return_val > 0)
+        {
+            // Receive data from client
+            if(FD_ISSET(client_socket, &fd_read)&& nonblocking_read(client_socket, server_socket, "Client -> Proxy: "))
+                break;
+
+            // Receive response from server
+            if(FD_ISSET(server_socket, &fd_read) && nonblocking_read(server_socket, client_socket, "Server -> Proxy: "))
+                break;
         }
-        std::cout << "Client -> Proxy: " << buffer;
-
-        // Forward data to the server
-        send(server_socket, buffer, bytes_read, 0);
-
-        // Receive response from server
-        memset(buffer, 0, BUFFER_SIZE);
-        bytes_read = read(server_socket, buffer, BUFFER_SIZE);
-        if (bytes_read <= 0) {
-            std::cout << "Server disconnected" << std::endl;
-            break;
-        }
-        std::cout << "Server -> Proxy: " << buffer;
-
-        // Forward response back to the client
-        send(client_socket, buffer, bytes_read, 0);
     }
 }
 
-int main() {
+int main(int argv, const char *argc[]) {
     int proxy_server_fd, client_socket, server_socket;
     struct sockaddr_in proxy_addr, client_addr, server_addr;
     int addrlen = sizeof(proxy_addr);
 
+    if (argv != 3)
+        return 1;
     // Create proxy server socket
     if ((proxy_server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
         perror("Proxy socket creation failed");
@@ -88,10 +102,10 @@ int main() {
     }
 
     server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(SERVER_PORT);
+    server_addr.sin_port = htons(atoi(argc[2]));
 
-    // Convert localhost address
-    if (inet_pton(AF_INET, "127.0.0.1", &server_addr.sin_addr) <= 0) {
+    // Convert localhost address "127.0.0.1"
+    if (inet_pton(AF_INET, argc[1], &server_addr.sin_addr) <= 0) {
         perror("Invalid server address");
         close(proxy_server_fd);
         close(client_socket);

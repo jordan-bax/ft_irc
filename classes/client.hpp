@@ -17,7 +17,7 @@ public:
 
 	// client & operator=( client const & rhs );
 	void	write(void);
-	void	read(s_env *env);
+	bool	read(s_env *env);
 };
 
 // std::ostream & operator<<( std::ostream & o, client const & rhs);

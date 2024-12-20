@@ -21,7 +21,6 @@ client::~client() {
 void	client::write(void){
 	send(this->_fd, this->buf_write.c_str(), this->buf_write.length(), 0);
 	this->buf_write.clear();
-
 }
 
 bool client::commands(){
@@ -36,7 +35,7 @@ bool client::commands(){
 	return true;
 }
 
-void	client::read(s_env *env){
+bool	client::read(s_env *env){
 	int		i;
 	int		r;
 	char	buf_read[BUF_SIZE + 1];
@@ -44,14 +43,16 @@ void	client::read(s_env *env){
 	r = recv(this->_fd, buf_read, BUF_SIZE, 0);
 	if (r <= 0)
 	{
-		printf("client #%d gone away\n", this->_fd);
+		std::cout << "client #" << this->_fd << "gone away"<< std::endl;
 		close(this->_fd);
-		std::vector<connection*>::const_iterator it = connection::find(env->connections.begin(), env->connections.end(), this->_fd);
-		delete (*it);
-		env->connections.erase(it);
-		return;
+		// std::vector<connection*>::iterator it = connection::find(env->connections.begin(), env->connections.end(), this->_fd);
+		// delete (*it);
+		// it = 0;
+		// env->connections.erase(it);
+		return false;
 	}
 	buf_read[r] = '\0';
+	std::cout << "get read" <<" > "<< buf_read << " read\n";
 	this->buf_read = buf_read;
 	if (commands())
 	{
@@ -68,6 +69,7 @@ void	client::read(s_env *env){
 			it++;
 		}
 	}
+	return true;
 }
 
 // client & client::operator=( client const & rhs ) {

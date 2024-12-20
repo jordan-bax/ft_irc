@@ -13,5 +13,5 @@ void	main_loop(t_env *e)
 	}
 	connection::clear(e->connections);
 	
-	server_close(e);
+	// server_close(e);
 }
