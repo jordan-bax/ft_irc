@@ -1,5 +1,5 @@
 
-VPATH= preset : classes : other
+VPATH= preset : classes : other : commands
 
 NAME= irc_server
 
@@ -8,7 +8,7 @@ CLASSES+= connection client server
 SRC= main.cpp init_env.cpp clean_fd.cpp get_opt.cpp x.cpp main_loop.cpp \
 	init_fd.cpp do_select.cpp check_fd.cpp \
 	srv_create.cpp srv_accept.cpp \
-	client_read.cpp client_write.cpp
+	client_read.cpp client_write.cpp client_commands.cpp
 
 SRC+= User_data.cpp signals.cpp srv_read.cpp
 SRC+= $(CLASSES:%=%.cpp)

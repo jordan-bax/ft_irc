@@ -9,6 +9,7 @@ private:
 	std::string _password;
 
 	bool	commands();
+	void	handle_client_input();
 public:
 	client();
 	client( int type , int fd );

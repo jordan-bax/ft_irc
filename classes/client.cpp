@@ -54,20 +54,12 @@ bool	client::read(s_env *env){
 	buf_read[r] = '\0';
 	std::cout << "get read" <<" > "<< buf_read << " read\n";
 	this->buf_read = buf_read;
-	if (commands())
-	{
-		std::vector<connection*>::const_iterator it = env->connections.cbegin();
-		std::vector<connection*>::const_iterator ite = env->connections.cend();
-		while (it != ite)
-		{
-			if (((*it)->get_type() == FD_CLIENT) && (this->_fd != (*it)->get_fd()))
-			{
-				std::string message = _nick_name + " " + this->buf_read;
-				std::cout <<"massage> " <<message << "size>" << message.size()<< std::endl;
-				send((*it)->get_fd(), message.c_str(),message.size() , 0);
-			}
-			it++;
-		}
+	try {
+		handle_client_input();
+	}
+	catch(const std::exception& e) {
+		buf_write = e.what();
+		// std::cerr << e.what() << '\n';
 	}
 	return true;
 }
