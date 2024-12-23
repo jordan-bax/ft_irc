@@ -40,10 +40,10 @@ public:
 		}
 		start.shrink_to_fit();
 	};
-	void	set_bufwrite(std::string write){this->buf_write = write;};
+	void			set_bufwrite(std::string write){this->buf_write = write;};
 	std::string		get_bufwrite()const{return buf_write;};
-	int		get_fd()const{return _fd;};
-	int		get_type()const{return _type;};
+	int				get_fd()const{return _fd;};
+	int				get_type()const{return _type;};
 	virtual bool	read(s_env *env) = 0;
 	virtual void	write(void) = 0;
 };

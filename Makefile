@@ -3,7 +3,7 @@ VPATH= preset : classes : other : commands
 
 NAME= irc_server
 
-CLASSES+= connection client server
+CLASSES+= connection client server term_reader
 
 SRC= main.cpp init_env.cpp clean_fd.cpp get_opt.cpp x.cpp main_loop.cpp \
 	init_fd.cpp do_select.cpp check_fd.cpp \

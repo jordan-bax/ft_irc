@@ -1,9 +1,10 @@
-
+#include <unistd.h>
 #include <stdlib.h>
 #include <netdb.h>
 #include <netinet/in.h>
 #include "bircd.h"
 #include "../classes/server.hpp"
+#include "../classes/term_reader.hpp"
 
 void			srv_create(t_env *e, int port)
 {
@@ -24,5 +25,6 @@ void			srv_create(t_env *e, int port)
 		// e->fds[s].type = FD_SERV;
 		// e->fds[s].fct_read = srv_accept;
 		// e->fds[0].fct_read = srv_read;
+		e->connections.push_back(new term_reader(FD_IO, STDIN_FILENO));
 		e->connections.push_back(new server(FD_SERV, s));
 }

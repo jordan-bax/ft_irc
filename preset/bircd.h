@@ -8,6 +8,7 @@
 # include "../mycolor.hpp"
 
 # define FD_FREE	0
+# define FD_IO	  1
 # define FD_SERV	1
 # define FD_CLIENT	2
 
