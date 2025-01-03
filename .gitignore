@@ -30,4 +30,7 @@
 *.exe
 *.out
 *.app
-irc*
+
+/.vscode
+irc_server
+.gitignore

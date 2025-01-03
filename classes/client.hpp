@@ -1,5 +1,6 @@
 #pragma once
 #include "connection.hpp"
+#include <unordered_map>
 
 class client : public connection
 {
@@ -10,11 +11,25 @@ private:
 
 	bool	commands();
 	void	handle_client_input();
+
+	// command functions
+	void	help(std::vector<std::string> input);
+	void	privmsg(std::vector<std::string> input);
+	void	user(std::vector<std::string> input);
+	void	nick(std::vector<std::string> input);
+	void	pass(std::vector<std::string> input);
+	void	kick(std::vector<std::string> input);
+	void	invite(std::vector<std::string> input);
+	void	topic(std::vector<std::string> input);
+	void	mode(std::vector<std::string> input);
 public:
 	client();
 	client( int type , int fd );
 	// client( client const & src );
 	~client();
+
+	using FunctionPtr = void (client::*)(std::vector<std::string>);
+	static const std::unordered_map<std::string, FunctionPtr> functionMap;
 
 	// client & operator=( client const & rhs );
 	void	write(void);

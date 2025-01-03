@@ -8,7 +8,7 @@ CLASSES+= connection client server term_reader
 SRC= main.cpp init_env.cpp clean_fd.cpp get_opt.cpp x.cpp main_loop.cpp \
 	init_fd.cpp do_select.cpp check_fd.cpp \
 	srv_create.cpp srv_accept.cpp \
-	client_read.cpp client_write.cpp client_commands.cpp
+	client_read.cpp client_write.cpp client_input.cpp client_commands.cpp
 
 SRC+= User_data.cpp signals.cpp srv_read.cpp
 SRC+= $(CLASSES:%=%.cpp)
