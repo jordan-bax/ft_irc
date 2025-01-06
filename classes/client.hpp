@@ -1,5 +1,6 @@
 #pragma once
 #include "connection.hpp"
+#include "../Messages.hpp"
 #include <unordered_map>
 
 class client : public connection
@@ -34,6 +35,10 @@ public:
 	// client & operator=( client const & rhs );
 	void	write(void);
 	bool	read(s_env *env);
+
+	std::string	reply_message(messages::Client numeric_reply, std::string const &param);
+	void		send_numeric_reply(int numeric_reply, std::string const &msg);
+	void		send_message(std::string const &target, std::string const &msg);
 };
 
 // std::ostream & operator<<( std::ostream & o, client const & rhs);

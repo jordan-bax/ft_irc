@@ -1,4 +1,6 @@
 #include "client.hpp"
+#include "client_exception.hpp"
+#include "server_exception.hpp"
 #include <sys/socket.h>
 #include <unistd.h>
 
@@ -57,10 +59,14 @@ bool	client::read(s_env *env){
 	try {
 		handle_client_input();
 	}
-	catch(const std::exception& e) {
-		buf_write = e.what();
-		// std::cerr << e.what() << '\n';
+	catch(const server_exception& e) {
+		std::cout << e.what();
 	}
+	catch(const client_exception& e) {
+		messages::Client numeric_reply = e.get_numeric_reply();
+		send_numeric_reply(numeric_reply, reply_message(numeric_reply, e.what()));
+	}
+	
 	return true;
 }
 

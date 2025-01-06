@@ -6,7 +6,7 @@
 #include <sstream>
 #include <iterator>
 
-std::vector<std::string>	split(std::string const &str, char delimiter) {
+static std::vector<std::string>	split(std::string const &str, char delimiter) {
 	std::vector<std::string>	result;
 	std::string					token;
 	std::istringstream			token_stream(str);
@@ -26,7 +26,7 @@ const std::unordered_map<std::string, client::FunctionPtr> client::functionMap =
     {"HELP", &client::help},
     {"PRIVMSG", NULL},
     {"JOIN", NULL},
-	{"USER", &client::user},
+	{"USER", NULL},
 	{"NICK", &client::nick},
 	{"PASS", &client::pass},
 	{"KICK", NULL},
@@ -39,7 +39,7 @@ static std::unordered_map<std::string, client::FunctionPtr>::const_iterator veri
 {
 	std::unordered_map<std::string, client::FunctionPtr>::const_iterator i = client::functionMap.find(input.front());
 	if (i == client::functionMap.end())
-		throw(client_exception("Invalid command: " + input.front() + '\n'));
+		throw(client_exception(messages::Client::ERR_UNKNOWNCOMMAND, input.front()));
 	return (i);
 }
 
@@ -49,7 +49,8 @@ void	client::handle_client_input()
 	std::vector<std::string> input = split(buf_read, ' ');
 
 	if (input.empty())
-		throw(client_exception(messages::client::INPUT_USAGE));
+		return ;
 	i = verify_input(input);
-	(this->*(i->second))(input);
+	if (i->second != NULL)
+		(this->*(i->second))(input);
 }

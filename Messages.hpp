@@ -5,7 +5,7 @@
 #include <string>
 
 namespace messages {
-	namespace client {
+	namespace client_message {
 		constexpr const char *HELP_MESSAGE = 
     		"\nWelcome to the IRC server! Available commands are:\n"
     		"HELP          : Displays this help message.\n"
@@ -38,9 +38,25 @@ namespace messages {
 		constexpr const char *ERROR_PASS_ALREADY_SET = "Error: password has already been set\n";
 	}
 
+	enum Client {
+		RPL_WELCOME = 1,
+		RPL_YOURHOST = 2,
+		RPL_CREATED = 3,
+		RPL_MYINFO = 4,
+		ERR_UNKNOWNCOMMAND = 421,		// unknown command
+		ERR_NONICKNAMEGIVEN = 431,		// returned when nickname parameter is missing
+		ERR_ERRONEUSNICKNAME = 432,		// returned after a invalid nickname has been entered
+		ERR_NICKNAMEINUSE = 433,		// returned when nickname already exists
+		ERR_UNAVAILRESOURCE = 437,		// returned when nickname or channel is unavailable
+		ERR_NEEDMOREPARAMS = 461,		// returned when not enough paramaters have been entered
+		ERR_ALREADYREGISTERED = 462		// returned when someome tries to register when already registered
+	};
+
 	namespace server {
 
 	}
 }
+
+std::string	get_client_message(messages::Client numeric_reply);
 
 #endif
