@@ -57,7 +57,7 @@ bool	client::read(s_env *env){
 	std::cout << "get read" <<" > "<< buf_read << " read\n";
 	this->buf_read = buf_read;
 	try {
-		handle_client_input();
+		handle_client_input(env);
 	}
 	catch(const server_exception& e) {
 		std::cout << e.what();

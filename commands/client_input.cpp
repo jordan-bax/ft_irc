@@ -24,7 +24,7 @@ static std::vector<std::string>	split(std::string const &str, char delimiter) {
 
 const std::unordered_map<std::string, client::FunctionPtr> client::functionMap = {
     {"HELP", &client::help},
-    {"PRIVMSG", NULL},
+    {"PRIVMSG", &client::privmsg},
     {"JOIN", NULL},
 	{"USER", NULL},
 	{"NICK", &client::nick},
@@ -43,7 +43,7 @@ static std::unordered_map<std::string, client::FunctionPtr>::const_iterator veri
 	return (i);
 }
 
-void	client::handle_client_input()
+void	client::handle_client_input(s_env *env)
 {
 	std::unordered_map<std::string, FunctionPtr>::const_iterator i;
 	std::vector<std::string> input = split(buf_read, ' ');
@@ -52,5 +52,5 @@ void	client::handle_client_input()
 		return ;
 	i = verify_input(input);
 	if (i->second != NULL)
-		(this->*(i->second))(input);
+		(this->*(i->second))(input, env);
 }

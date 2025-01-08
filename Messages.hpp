@@ -44,12 +44,19 @@ namespace messages {
 		RPL_CREATED = 3,
 		RPL_MYINFO = 4,
 		ERR_UNKNOWNCOMMAND = 421,		// unknown command
+
 		ERR_NONICKNAMEGIVEN = 431,		// returned when nickname parameter is missing
 		ERR_ERRONEUSNICKNAME = 432,		// returned after a invalid nickname has been entered
 		ERR_NICKNAMEINUSE = 433,		// returned when nickname already exists
 		ERR_UNAVAILRESOURCE = 437,		// returned when nickname or channel is unavailable
 		ERR_NEEDMOREPARAMS = 461,		// returned when not enough paramaters have been entered
-		ERR_ALREADYREGISTERED = 462		// returned when someome tries to register when already registered
+		ERR_ALREADYREGISTERED = 462,	// returned when someome tries to register when already registered
+
+		ERR_NORECIPIENT = 411,			// returned when no recipient entered in privmsg
+		ERR_CANNOTSENDTOCHAN = 404,		// returned when user is either not in channel or banned or mode on mute
+		ERR_NOSUCHNICK = 401,			// returned when nick isn't used
+		ERR_NOTEXTTOSEND = 412			// returned when user hasn't entered text to send
+		
 	};
 
 	namespace server {
