@@ -11,7 +11,7 @@ namespace messages {
     		"HELP          : Displays this help message.\n"
     		"PRIVMSG <msgtarget> :<message> : Sends a private message to a user.\n"
     		"JOIN <channel> : Joins the specified channel.\n"
-    		"USER <username> : Sets the username for the client.\n"
+    		"USER <user> <unused> <unused> <realname> : Sets the username for the client.\n"
     		"NICK <nickname> : Sets the nickname for the client.\n"
     		"PASS <password> : Provides the password for authentication.\n"
     		"KICK <channel> <user> : Kicks a user from a channel.\n"
@@ -49,6 +49,7 @@ namespace messages {
 		ERR_ERRONEUSNICKNAME = 432,		// returned after a invalid nickname has been entered
 		ERR_NICKNAMEINUSE = 433,		// returned when nickname already exists
 		ERR_UNAVAILRESOURCE = 437,		// returned when nickname or channel is unavailable
+		ERR_NOTREGISTERED = 451,		// returned when user tries to do something he need to be registered for
 		ERR_NEEDMOREPARAMS = 461,		// returned when not enough paramaters have been entered
 		ERR_ALREADYREGISTERED = 462,	// returned when someome tries to register when already registered
 

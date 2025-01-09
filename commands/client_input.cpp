@@ -26,7 +26,7 @@ const std::unordered_map<std::string, client::FunctionPtr> client::functionMap =
     {"HELP", &client::help},
     {"PRIVMSG", &client::privmsg},
     {"JOIN", NULL},
-	{"USER", NULL},
+	{"USER", &client::user},
 	{"NICK", &client::nick},
 	{"PASS", &client::pass},
 	{"KICK", NULL},

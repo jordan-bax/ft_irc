@@ -7,6 +7,7 @@ class client : public connection
 {
 private:
 	std::string _full_name;
+	std::string	_user_name;
 	std::string _nick_name;
 	std::string _password;
 

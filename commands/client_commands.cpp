@@ -10,9 +10,24 @@ void	client::help(std::vector<std::string> input, s_env *env)
 	send_message(_nick_name, messages::client_message::HELP_MESSAGE);
 }
 
+// static std::string	extract_message(const std::vector<std::string> &input) {
+// 	std::string	msg;
+// 	bool first = true;
+
+// 	for (std::string const &word: input) {
+// 		if (first) {
+// 			msg += word.substr(1);
+// 			first = false;
+// 		} else
+// 			msg += ' ' + word;
+// 	}
+// 	return (msg);
+// }
+
 void	client::privmsg(std::vector<std::string> input, s_env *env)
 {
-	// TODO fix target and create receive_message function
+	if (_user_name.empty())
+		throw(client_exception(messages::Client::ERR_NOTREGISTERED));
 	if (input.size() < 2 )
 		throw(client_exception(messages::Client::ERR_NORECIPIENT, input[0]));
 	int	i = 1;
@@ -27,6 +42,8 @@ void	client::privmsg(std::vector<std::string> input, s_env *env)
 	std::string	target;
 	for (int j = 1; j < i; j++)
 		target += input[j];
+	if (target.length() < 1)
+		throw(client_exception(messages::Client::ERR_NORECIPIENT, input[0]));
 	client *target_client;
 	if (!(target_client = search_client_nick(env, target)))
 		throw(client_exception(messages::Client::ERR_NOSUCHNICK, target));
@@ -42,15 +59,28 @@ void	client::privmsg(std::vector<std::string> input, s_env *env)
 	target_client->receive_message(_nick_name, msg);
 }
 
-// void	client::user(std::vector<std::string> input)
-// {
-// 	if (input.size() > 2)
-// 		throw(client_exception(messages::client_message::ERROR_TOO_MANY_PAR));
-// 	if (input.size() < 2)
-// 		throw(client_exception(messages::client_message::ERROR_TOO_FEW_PAR));
-// 	_full_name = input[1];
-// 	buf_write = "Username has been set to: " + _full_name + "\n";
-// }
+// TODO possibly add custom numeric reply codes if available clients allow
+void client::user(std::vector<std::string> input, s_env *env) {
+	if (input.size() < 5)
+		throw(client_exception(messages::Client::ERR_NEEDMOREPARAMS, input[0]));
+	if (!_user_name.empty())
+		throw(client_exception(messages::Client::ERR_ALREADYREGISTERED));
+	if (_nick_name.empty())
+		throw(client_exception(messages::Client::ERR_NOTREGISTERED));
+	if (input[4][0] != ':')
+		throw(client_exception(messages::Client::ERR_NEEDMOREPARAMS));
+	
+	std::string	full_name;
+	for (int i = 4; i < input.size(); i++) {
+		if (i == 4)
+			input[i].erase(0, 1);
+		else
+			full_name += ' ';
+		full_name += input[i];
+	}
+	_full_name = full_name;
+	_user_name = input[1];
+}
 
 void	client::nick(std::vector<std::string> input, s_env *env) {
 	if (input.size() < 2)

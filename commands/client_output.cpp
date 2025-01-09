@@ -41,7 +41,7 @@ void	client::send_numeric_reply(int numeric_reply, std::string const &msg) {
 	while (std::getline(msg_stream, line))
 	{
 		line_stream.str("");
-		line_stream << ":" << "<servername>" << " " << numeric_reply << " " << nick_name << " :" << line << "\r\n";
+		line_stream << ":" << "127.0.0.1@localhost" << " " << numeric_reply << " " << nick_name << " " << line << "\r\n";
 		buf_write = line_stream.str();
 		write();
 	}
