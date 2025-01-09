@@ -47,6 +47,21 @@ void	client::send_numeric_reply(int numeric_reply, std::string const &msg) {
 	}
 }
 
+void	client::receive_message(std::string const &sender, std::string const &msg) {
+	std::stringstream	msg_stream;
+	std::stringstream	line_stream;
+	std::string			line;
+
+	msg_stream << msg;
+	while (std::getline(msg_stream, line))
+	{
+		line_stream.str("");
+		line_stream << ":" << sender << " PRIVMSG " << _nick_name << " :" << line << "\r\n";
+		buf_write = line_stream.str();
+		write();
+	}
+}
+
 void	client::send_message(std::string const &target, std::string const &msg) {
 	std::stringstream	msg_stream;
 	std::stringstream	line_stream;

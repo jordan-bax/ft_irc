@@ -38,6 +38,7 @@ public:
 
 	std::string	reply_message(messages::Client numeric_reply, std::string const &param);
 	void		send_numeric_reply(int numeric_reply, std::string const &msg);
+	void		receive_message(std::string const &sender, std::string const &msg);
 	void		send_message(std::string const &target, std::string const &msg);
 
 	std::string	const &get_nick() const {return (_nick_name);}

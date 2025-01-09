@@ -39,7 +39,7 @@ void	client::privmsg(std::vector<std::string> input, s_env *env)
 			msg += ' ';
 		msg += input[j];
 	}
-	target_client->send_message(target, msg);
+	target_client->receive_message(_nick_name, msg);
 }
 
 // void	client::user(std::vector<std::string> input)
