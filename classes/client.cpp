@@ -17,25 +17,26 @@ client::client( int type, int fd ) : connection(type, fd) {
 	
 // }
 client::~client() {
+	if (_user)
+		delete(_user);
 	std::cout << "del client [" << _fd << "]\n";
-	
 }
 void	client::write(void){
 	send(this->_fd, this->buf_write.c_str(), this->buf_write.length(), 0);
 	this->buf_write.clear();
 }
 
-bool client::commands(){
-	if (this->buf_read.length() > 6 && !this->buf_read.compare(0, 6, "LOGIN "))
-	{
-		std::string temp(this->buf_read.substr(6,this->buf_read.size()));
-		temp.pop_back();
-		this->_full_name = temp;
-		this->_nick_name = temp;
-		return false;
-	}
-	return true;
-}
+// bool client::commands(){
+// 	if (this->buf_read.length() > 6 && !this->buf_read.compare(0, 6, "LOGIN "))
+// 	{
+// 		std::string temp(this->buf_read.substr(6,this->buf_read.size()));
+// 		temp.pop_back();
+// 		this->_full_name = temp;
+// 		this->_nick_name = temp;
+// 		return false;
+// 	}
+// 	return true;
+// }
 
 bool	client::read(s_env *env){
 	int		i;

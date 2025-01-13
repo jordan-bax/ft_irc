@@ -5,28 +5,16 @@
 #include "temporary.hpp"
 #include <sstream>
 
+// TODO: check if client allows custom numeric codes
+
 void	client::help(std::vector<std::string> input, s_env *env)
 {
-	send_message(_nick_name, messages::client_message::HELP_MESSAGE);
+	client_message(messages::client_message::HELP_MESSAGE);
 }
-
-// static std::string	extract_message(const std::vector<std::string> &input) {
-// 	std::string	msg;
-// 	bool first = true;
-
-// 	for (std::string const &word: input) {
-// 		if (first) {
-// 			msg += word.substr(1);
-// 			first = false;
-// 		} else
-// 			msg += ' ' + word;
-// 	}
-// 	return (msg);
-// }
 
 void	client::privmsg(std::vector<std::string> input, s_env *env)
 {
-	if (_user_name.empty())
+	if (_user == NULL)
 		throw(client_exception(messages::Client::ERR_NOTREGISTERED));
 	if (input.size() < 2 )
 		throw(client_exception(messages::Client::ERR_NORECIPIENT, input[0]));
@@ -56,16 +44,15 @@ void	client::privmsg(std::vector<std::string> input, s_env *env)
 			msg += ' ';
 		msg += input[j];
 	}
-	target_client->receive_message(_nick_name, msg);
+	target_client->receive_message(*_user, msg);
 }
 
-// TODO possibly add custom numeric reply codes if available clients allow
 void client::user(std::vector<std::string> input, s_env *env) {
 	if (input.size() < 5)
 		throw(client_exception(messages::Client::ERR_NEEDMOREPARAMS, input[0]));
-	if (!_user_name.empty())
+	if (_user != NULL)
 		throw(client_exception(messages::Client::ERR_ALREADYREGISTERED));
-	if (_nick_name.empty())
+	if (_tmp_nick.empty())
 		throw(client_exception(messages::Client::ERR_NOTREGISTERED));
 	if (input[4][0] != ':')
 		throw(client_exception(messages::Client::ERR_NEEDMOREPARAMS));
@@ -78,26 +65,30 @@ void client::user(std::vector<std::string> input, s_env *env) {
 			full_name += ' ';
 		full_name += input[i];
 	}
-	_full_name = full_name;
-	_user_name = input[1];
+	_user = new User_data(_fd);
+	_user->set_nickname(_tmp_nick);
+	_user->set_fullname(full_name);
+	_user->set_username(input[1]);
 }
 
 void	client::nick(std::vector<std::string> input, s_env *env) {
+	if (_user != NULL)
+		throw(client_exception(messages::Client::ERR_ALREADYREGISTERED));
 	if (input.size() < 2)
 		throw(client_exception(messages::Client::ERR_NONICKNAMEGIVEN));
 	
 	// TODO: throw exception when nick in use, erroneous or blocked
 	if (!nick_available(env, input[1]))
 		throw(client_exception(messages::Client::ERR_NICKNAMEINUSE, input[1]));
-	_nick_name = input[1];
+	_tmp_nick = input[1];
 }
 
 void	client::pass(std::vector<std::string> input, s_env *env) {
-	if (!_password.empty())
+	if (_authorised)
 		throw(client_exception(messages::Client::ERR_ALREADYREGISTERED));
 	if (input.size() < 2)
 		throw(client_exception(messages::Client::ERR_NEEDMOREPARAMS, input[0]));
-	if (!_full_name.empty() || !_nick_name.empty())
-		throw(client_exception(messages::Client::ERR_ALREADYREGISTERED));
-	_password = input[1];
+	if (input[1] != SERVER_PASS)
+		throw(client_exception(messages::Client::ERR_PASSWDMISMATCH));
+	_authorised = true;
 }

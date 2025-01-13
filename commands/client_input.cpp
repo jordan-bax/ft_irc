@@ -51,6 +51,8 @@ void	client::handle_client_input(s_env *env)
 	if (input.empty())
 		return ;
 	i = verify_input(input);
+	if (i->first != "PASS" && i->first != "HELP" && !_authorised)
+		throw(client_exception(messages::Client::ERR_NOTREGISTERED));
 	if (i->second != NULL)
 		(this->*(i->second))(input, env);
 }

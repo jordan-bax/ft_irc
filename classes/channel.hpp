@@ -2,6 +2,10 @@
 #include <iostream>
 #include <vector>
 
+#define DEFAULT_LIMIT 100
+
+class client;
+
 class channel
 {
 private:
@@ -10,10 +14,12 @@ private:
 	bool			_invite_only;
 	bool			_topic;
 	unsigned int	_limit;
+	std::vector<client*> _clients;
 	std::vector<std::string> _operators;
 
-public:
 	channel();
+
+public:
 	channel( std::string name );
 	channel( channel const & src );
 	~channel();

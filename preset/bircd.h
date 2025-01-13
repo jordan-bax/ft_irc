@@ -4,6 +4,7 @@
 # include <sys/select.h>
 # include <vector>
 # include "../classes/User_data.hpp"
+#include "../classes/channel.hpp"
 # include "../classes/connection.hpp"
 # include "../mycolor.hpp"
 
@@ -37,6 +38,7 @@ typedef struct	s_fd
 typedef struct	s_env
 {
   std::vector<connection*> connections;
+  std::vector<channel>    channels;
   // t_fd		*fds; // malloc * maxfd
   int		port; // the port to lissen
   int		maxfd; // set resource soft limits

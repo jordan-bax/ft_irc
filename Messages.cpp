@@ -11,6 +11,7 @@ std::string	get_client_message(messages::Client numeric_reply) {
 		{messages::Client::RPL_YOURHOST, ":Your host is <servername>, running version <version>"},
 		{messages::Client::RPL_CREATED, ":This server was created <date>"},
 		{messages::Client::RPL_MYINFO, ":<servername> <version> <available user modes> <available channel modes>"},
+		{messages::Client::RPL_AWAY, " :User is currently offline"},
 		{messages::Client::ERR_NOSUCHNICK, " :No suck nick/channel"},
 		{messages::Client::ERR_CANNOTSENDTOCHAN, " :Cannot send to channel"},
 		{messages::Client::ERR_NORECIPIENT, ":No recipient given "},
@@ -22,7 +23,8 @@ std::string	get_client_message(messages::Client numeric_reply) {
 		{messages::Client::ERR_UNAVAILRESOURCE, " :Nick/channel is temporarily unavailable"},
 		{messages::Client::ERR_NOTREGISTERED, ":You have not registered"},
 		{messages::Client::ERR_NEEDMOREPARAMS, " :Not enough parameters"},
-		{messages::Client::ERR_ALREADYREGISTERED, ":Unauthorized command (already registered)"}
+		{messages::Client::ERR_ALREADYREGISTERED, ":Unauthorized command (already registered)"},
+		{messages::Client::ERR_PASSWDMISMATCH, ":Password incorrect"}
 	};
 
 	auto it = reply_map.find(numeric_reply);

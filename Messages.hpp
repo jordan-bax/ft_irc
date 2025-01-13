@@ -43,6 +43,7 @@ namespace messages {
 		RPL_YOURHOST = 2,
 		RPL_CREATED = 3,
 		RPL_MYINFO = 4,
+		RPL_AWAY = 301,
 		ERR_UNKNOWNCOMMAND = 421,		// unknown command
 
 		ERR_NONICKNAMEGIVEN = 431,		// returned when nickname parameter is missing
@@ -52,6 +53,7 @@ namespace messages {
 		ERR_NOTREGISTERED = 451,		// returned when user tries to do something he need to be registered for
 		ERR_NEEDMOREPARAMS = 461,		// returned when not enough paramaters have been entered
 		ERR_ALREADYREGISTERED = 462,	// returned when someome tries to register when already registered
+		ERR_PASSWDMISMATCH = 464,		// returned when entered password is incorrect
 
 		ERR_NORECIPIENT = 411,			// returned when no recipient entered in privmsg
 		ERR_CANNOTSENDTOCHAN = 404,		// returned when user is either not in channel or banned or mode on mute

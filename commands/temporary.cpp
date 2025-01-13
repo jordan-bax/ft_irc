@@ -1,5 +1,7 @@
 
 #include "temporary.hpp"
+#include "../classes/client_exception.hpp"
+#include "../Messages.hpp"
 
 std::vector<client*> get_clients(s_env *env) {
 	std::vector<client*> clients;
@@ -19,7 +21,7 @@ client	*search_client_nick(s_env *env, std::string nick_name)
 	std::vector<client*> clients = get_clients(env);
 
 	for (auto *client: clients) {
-		if (client->get_nick() == nick_name)
+		if (client->is_registered() && client->get_nick() == nick_name)
 			return (client);
 	}
 	return (NULL);
@@ -30,7 +32,7 @@ bool	nick_available(s_env *env, std::string nick_name)
 	std::vector<client*> clients = get_clients(env);
 
 	for (auto *client: clients) {
-		if (client->get_nick() == nick_name)
+		if (client->is_registered() && client->get_nick() == nick_name)
 			return (false);
 	}
 	return (true);

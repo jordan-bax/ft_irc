@@ -10,6 +10,7 @@ std::string	client::reply_message(messages::Client numeric_reply, std::string co
 	std::string	msg = get_client_message(numeric_reply);
 
 	switch (numeric_reply) {
+		case messages::Client::RPL_AWAY:
 		case messages::Client::ERR_NOSUCHNICK:
 		case messages::Client::ERR_CANNOTSENDTOCHAN:
 		case messages::Client::ERR_UNKNOWNCOMMAND:
@@ -35,7 +36,7 @@ void	client::send_numeric_reply(int numeric_reply, std::string const &msg) {
 	std::stringstream	msg_stream;
 	std::stringstream	line_stream;
 	std::string			line;
-	std::string			nick_name = _nick_name.empty() ? "<not registered>" : _nick_name;
+	std::string			nick_name = _user == NULL ? "<not registered>" : _user->get_nickname();
 
 	msg_stream << msg;
 	while (std::getline(msg_stream, line))
@@ -47,7 +48,7 @@ void	client::send_numeric_reply(int numeric_reply, std::string const &msg) {
 	}
 }
 
-void	client::receive_message(std::string const &sender, std::string const &msg) {
+void	client::receive_message(User_data const &sender, std::string const &msg) {
 	std::stringstream	msg_stream;
 	std::stringstream	line_stream;
 	std::string			line;
@@ -56,24 +57,22 @@ void	client::receive_message(std::string const &sender, std::string const &msg) 
 	while (std::getline(msg_stream, line))
 	{
 		line_stream.str("");
-		line_stream << ":" << sender << " PRIVMSG " << _nick_name << " :" << line << "\r\n";
+		line_stream << ":" << sender.get_nickname() << " PRIVMSG " << _user->get_nickname() << " :" << line << "\r\n";
 		buf_write = line_stream.str();
 		write();
 	}
 }
 
-void	client::send_message(std::string const &target, std::string const &msg) {
+void	client::client_message(std::string const &msg) {
 	std::stringstream	msg_stream;
 	std::stringstream	line_stream;
 	std::string			line;
-	std::string			nick_name = _nick_name == target ? "server" : _nick_name;
-	std::string			target_name = _nick_name == target ? "you" : _nick_name;
 
 	msg_stream << msg;
 	while (std::getline(msg_stream, line))
 	{
 		line_stream.str("");
-		line_stream << ":" << nick_name << " PRIVMSG " << target_name << " :" << line << "\r\n";
+		line_stream << ":" << "server" << " PRIVMSG " << "you" << " :" << line << "\r\n";
 		buf_write = line_stream.str();
 		write();
 	}
