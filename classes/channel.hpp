@@ -15,7 +15,7 @@ private:
 	bool			_topic;
 	unsigned int	_limit;
 	std::vector<client*> _clients;
-	std::vector<std::string> _operators;
+	std::vector<client*> _operators;
 
 	channel();
 
@@ -25,6 +25,14 @@ public:
 	~channel();
 
 	channel & operator=( channel const & rhs );
+
+	void	add_client(client *client);
+	void	remove_client(std::string nick_name);
+	void	add_operator(client *client);
+
+	bool	user_in_channel(std::string name);
+
+	std::string	const &get_name() const { return (_name); }
 
 };
 

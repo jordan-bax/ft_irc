@@ -4,6 +4,7 @@
 #include "../classes/client_exception.hpp"
 #include "temporary.hpp"
 #include <sstream>
+#include <map>
 
 // TODO: check if client allows custom numeric codes
 
@@ -91,4 +92,23 @@ void	client::pass(std::vector<std::string> input, s_env *env) {
 	if (input[1] != SERVER_PASS)
 		throw(client_exception(messages::Client::ERR_PASSWDMISMATCH));
 	_authorised = true;
+}
+
+
+// TODO: implement channel key
+void	client::join(std::vector<std::string> input, s_env *env) {
+	if (_user == NULL)
+		throw(client_exception(messages::Client::ERR_NOTREGISTERED));
+	if (input.size() < 3)
+		throw(client_exception(messages::Client::ERR_NEEDMOREPARAMS), input[0]);
+	std::vector<std::string> channels = split(input[1], ',');
+	std::vector<std::string> keys = split(input[2], ',');
+
+	for (int i = 0; i < channels.size(); i++) {
+		std::string key = i < keys.size() ? keys[i] : "";
+		if (channel_exists(env, channels[i]))
+			_channels.push_back(join_channel(env, channels[i], key, this));
+		else
+			_channels.push_back(new_channel(env, channels[i], this));
+	}
 }

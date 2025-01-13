@@ -37,3 +37,37 @@ bool	nick_available(s_env *env, std::string nick_name)
 	}
 	return (true);
 }
+
+bool	channel_exists(s_env *env, std::string name) {
+	for (auto channel: env->channels) {
+		if (channel.get_name() == name)
+			return (true);
+	}
+	return (false);
+}
+
+channel	*new_channel(s_env *env, std::string name, client *creator) {
+	if (channel_exists(env, name))
+		throw(client_exception(messages::Client::ERR_UNAVAILRESOURCE), name);
+	env->channels.push_back(channel(name));
+	channel *channel = &env->channels.back();
+	channel->add_client(creator);
+	channel->add_operator(creator);
+	return (channel);
+}
+
+// TODO: alot (check for key for example)
+// change behavior when user is already in channel
+channel *join_channel(s_env *env, std::string name, std::string key, client *client) {
+	if (!channel_exists(env, name))
+		throw(client_exception(messages::Client::ERR_NOSUCHNICK, name));
+	for (auto &channel: env->channels) {
+		if (channel.get_name() == name) {
+			if (channel.user_in_channel(client->get_nick()))
+				throw(client_exception(messages::Client::ERR_UNAVAILRESOURCE), channel.get_name());
+			channel.add_client(client);
+			return (&channel);
+		}
+	}
+	return (NULL);
+}

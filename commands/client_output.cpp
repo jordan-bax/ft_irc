@@ -18,6 +18,10 @@ std::string	client::reply_message(messages::Client numeric_reply, std::string co
 		case messages::Client::ERR_NICKNAMEINUSE:
 		case messages::Client::ERR_UNAVAILRESOURCE:
 		case messages::Client::ERR_NEEDMOREPARAMS:
+		case messages::Client::ERR_INVITEONLYCHAN:
+		case messages::Client::ERR_CHANNELISFULL:
+		case messages::Client::ERR_BADCHANNELKEY:
+		case messages::Client::ERR_TOOMANYCHANNELS:
 			if (param.empty())
 				throw(server_exception("Error: missing parameter"));
 			return (param + msg);

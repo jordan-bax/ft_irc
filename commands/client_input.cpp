@@ -6,7 +6,7 @@
 #include <sstream>
 #include <iterator>
 
-static std::vector<std::string>	split(std::string const &str, char delimiter) {
+std::vector<std::string>	client::split(std::string const &str, char delimiter) {
 	std::vector<std::string>	result;
 	std::string					token;
 	std::istringstream			token_stream(str);

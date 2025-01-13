@@ -58,8 +58,12 @@ namespace messages {
 		ERR_NORECIPIENT = 411,			// returned when no recipient entered in privmsg
 		ERR_CANNOTSENDTOCHAN = 404,		// returned when user is either not in channel or banned or mode on mute
 		ERR_NOSUCHNICK = 401,			// returned when nick isn't used
-		ERR_NOTEXTTOSEND = 412			// returned when user hasn't entered text to send
-		
+		ERR_NOTEXTTOSEND = 412,			// returned when user hasn't entered text to send
+
+		ERR_INVITEONLYCHAN = 473,		// returned when user tries to enter invite only channel
+		ERR_CHANNELISFULL = 471,		// returned when user tries to enter a channel that is full
+		ERR_BADCHANNELKEY = 475,		// returned when user enters wrong channel key
+		ERR_TOOMANYCHANNELS = 405		// returned when user has already enterd max channel count
 	};
 
 	namespace server {

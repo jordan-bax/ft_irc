@@ -4,13 +4,15 @@
 #include <unordered_map>
 
 #define SERVER_PASS "password"
+#define MAX_CHANNELS 5
 
 class client : public connection
 {
 private:
-	bool		_authorised = false;
-	std::string	_tmp_nick;
-	User_data	*_user = NULL;
+	bool					_authorised = false;
+	std::string				_tmp_nick;
+	User_data				*_user = NULL;
+	std::vector<channel*>	_channels;
 
 	bool	commands();
 	void	handle_client_input(s_env *env);
@@ -18,6 +20,7 @@ private:
 	// command functions
 	void	help(std::vector<std::string> input, s_env *env);
 	void	privmsg(std::vector<std::string> input, s_env *env);
+	void	join(std::vector<std::string> input, s_env *env);
 	void	user(std::vector<std::string> input, s_env *env);
 	void	nick(std::vector<std::string> input, s_env *env);
 	void	pass(std::vector<std::string> input, s_env *env);
@@ -37,6 +40,8 @@ public:
 	// client & operator=( client const & rhs );
 	void	write(void);
 	bool	read(s_env *env);
+
+	std::vector<std::string>	split(std::string const &str, char delimiter);
 
 	std::string	reply_message(messages::Client numeric_reply, std::string const &param);
 	void		send_numeric_reply(int numeric_reply, std::string const &msg);
