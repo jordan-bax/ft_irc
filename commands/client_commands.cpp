@@ -99,10 +99,13 @@ void	client::pass(std::vector<std::string> input, s_env *env) {
 void	client::join(std::vector<std::string> input, s_env *env) {
 	if (_user == NULL)
 		throw(client_exception(messages::Client::ERR_NOTREGISTERED));
-	if (input.size() < 3)
-		throw(client_exception(messages::Client::ERR_NEEDMOREPARAMS), input[0]);
+	if (input.size() < 2)
+		throw(client_exception(messages::Client::ERR_NEEDMOREPARAMS, input[0]));
+		
 	std::vector<std::string> channels = split(input[1], ',');
-	std::vector<std::string> keys = split(input[2], ',');
+	std::vector<std::string> keys;
+	if (input.size() > 2)
+		keys = split(input[2], ',');
 
 	for (int i = 0; i < channels.size(); i++) {
 		std::string key = i < keys.size() ? keys[i] : "";

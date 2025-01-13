@@ -46,6 +46,7 @@ bool	channel_exists(s_env *env, std::string name) {
 	return (false);
 }
 
+// TODO: change array to pointers and allocate each channel
 channel	*new_channel(s_env *env, std::string name, client *creator) {
 	if (channel_exists(env, name))
 		throw(client_exception(messages::Client::ERR_UNAVAILRESOURCE), name);

@@ -22,14 +22,20 @@ std::vector<std::string>	client::split(std::string const &str, char delimiter) {
 	return (result);
 }
 
+void	client::kick(std::vector<std::string> input, s_env *env) {
+	for (auto &channel: env->channels) {
+		std::cout << channel.get_name() << std::endl;
+	}
+}
+
 const std::unordered_map<std::string, client::FunctionPtr> client::functionMap = {
     {"HELP", &client::help},
     {"PRIVMSG", &client::privmsg},
-    {"JOIN", NULL},
+    {"JOIN", &client::join},
 	{"USER", &client::user},
 	{"NICK", &client::nick},
 	{"PASS", &client::pass},
-	{"KICK", NULL},
+	{"KICK", &client::kick},
 	{"INVITE", NULL},
 	{"TOPIC", NULL},
 	{"MODE", NULL}

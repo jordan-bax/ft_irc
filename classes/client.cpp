@@ -17,11 +17,11 @@ client::client( int type, int fd ) : connection(type, fd) {
 	
 // }
 client::~client() {
-	if (_user)
-		delete(_user);
 	for (auto &channel: _channels) {
 		channel->remove_client(_user->get_nickname());
 	}
+	if (_user)
+		delete(_user);
 	std::cout << "del client [" << _fd << "]\n";
 }
 void	client::write(void){
