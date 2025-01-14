@@ -1,5 +1,6 @@
 
 #include "../classes/client.hpp"
+#include "../classes/channel.hpp"
 #include "../Messages.hpp"
 #include "../classes/client_exception.hpp"
 #include "temporary.hpp"
@@ -13,39 +14,42 @@ void	client::help(std::vector<std::string> input, s_env *env)
 	client_message(messages::client_message::HELP_MESSAGE);
 }
 
+void	client::send_usrmsg(std::string const &target, std::string const &msg, s_env *env) {
+	client *target_client;
+
+	if (!(target_client = search_client_nick(env, target)))
+		throw(client_exception(messages::Client::ERR_NOSUCHNICK, target));
+	target_client->receive_message(get_nick(), msg);
+}
+
+void	client::send_chanmsg(std::string const &target, std::string const &msg, s_env *env) {
+	channel	*target_channel;
+
+	if (!(target_channel = search_channel(env, target)))
+		throw(client_exception(messages::Client::ERR_NOSUCHCHANNEL));
+	target_channel->send_message(get_nick(), msg);
+}
+
 void	client::privmsg(std::vector<std::string> input, s_env *env)
 {
 	if (_user == NULL)
 		throw(client_exception(messages::Client::ERR_NOTREGISTERED));
 	if (input.size() < 2 )
 		throw(client_exception(messages::Client::ERR_NORECIPIENT, input[0]));
-	int	i = 1;
-	while (i < input.size()) {
-		if (input[i][0] == ':')
-			break ;
-		i++;
-	}
-	if (i == input.size())
+	if (input.size() < 3 && input[1][0] == ':')
+		throw(client_exception(messages::Client::ERR_NORECIPIENT, input[0]));
+	else if (input.size() < 3)
+		throw(client_exception(messages::Client::ERR_NOTEXTTOSEND));
+	if (input[2][0] != ':')
 		throw(client_exception(messages::Client::ERR_NOTEXTTOSEND));
 
-	std::string	target;
-	for (int j = 1; j < i; j++)
-		target += input[j];
-	if (target.length() < 1)
-		throw(client_exception(messages::Client::ERR_NORECIPIENT, input[0]));
-	client *target_client;
-	if (!(target_client = search_client_nick(env, target)))
-		throw(client_exception(messages::Client::ERR_NOSUCHNICK, target));
-
-	std::string	msg;
-	for (int j = i; j < input.size(); j++) {
-		if (j == i)
-			input[j].erase(0, 1);
-		else
-			msg += ' ';
-		msg += input[j];
-	}
-	target_client->receive_message(*_user, msg);
+	std::string target = input[1];
+	std::string msg = input[2];
+	msg.erase(msg.begin(), msg.begin() + 1);
+	if (std::string("#&+!").find(input[1][0]) != std::string::npos)
+		send_chanmsg(target, msg, env);
+	else
+		send_usrmsg(target, msg, env);
 }
 
 void client::user(std::vector<std::string> input, s_env *env) {
@@ -94,8 +98,6 @@ void	client::pass(std::vector<std::string> input, s_env *env) {
 	_authorised = true;
 }
 
-
-// TODO: implement channel key
 void	client::join(std::vector<std::string> input, s_env *env) {
 	if (_user == NULL)
 		throw(client_exception(messages::Client::ERR_NOTREGISTERED));
@@ -109,9 +111,11 @@ void	client::join(std::vector<std::string> input, s_env *env) {
 
 	for (int i = 0; i < channels.size(); i++) {
 		std::string key = i < keys.size() ? keys[i] : "";
+		if (!channel::valid_name(channels[i]))
+			throw(client_exception(messages::Client::ERR_NOSUCHCHANNEL, channels[i]));
 		if (channel_exists(env, channels[i]))
-			_channels.push_back(join_channel(env, channels[i], key, this));
+			_channels.push_back(join_channel(env, channels[i], this, key));
 		else
-			_channels.push_back(new_channel(env, channels[i], this));
+			_channels.push_back(new_channel(env, channels[i], this, key));
 	}
 }

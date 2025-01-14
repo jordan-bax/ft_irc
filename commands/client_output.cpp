@@ -18,6 +18,7 @@ std::string	client::reply_message(messages::Client numeric_reply, std::string co
 		case messages::Client::ERR_NICKNAMEINUSE:
 		case messages::Client::ERR_UNAVAILRESOURCE:
 		case messages::Client::ERR_NEEDMOREPARAMS:
+		case messages::Client::ERR_NOSUCHCHANNEL:
 		case messages::Client::ERR_INVITEONLYCHAN:
 		case messages::Client::ERR_CHANNELISFULL:
 		case messages::Client::ERR_BADCHANNELKEY:
@@ -52,7 +53,7 @@ void	client::send_numeric_reply(int numeric_reply, std::string const &msg) {
 	}
 }
 
-void	client::receive_message(User_data const &sender, std::string const &msg) {
+void	client::receive_message(std::string const &sender, std::string const &msg) {
 	std::stringstream	msg_stream;
 	std::stringstream	line_stream;
 	std::string			line;
@@ -61,7 +62,7 @@ void	client::receive_message(User_data const &sender, std::string const &msg) {
 	while (std::getline(msg_stream, line))
 	{
 		line_stream.str("");
-		line_stream << ":" << sender.get_nickname() << " PRIVMSG " << _user->get_nickname() << " :" << line << "\r\n";
+		line_stream << ":" << sender << " PRIVMSG " << get_nick() << " :" << line << "\r\n";
 		buf_write = line_stream.str();
 		write();
 	}
@@ -77,7 +78,7 @@ void	client::client_message(std::string const &msg) {
 	{
 		line_stream.str("");
 		line_stream << ":" << "server" << " PRIVMSG " << "you" << " :" << line << "\r\n";
-		buf_write = line_stream.str();
+		buf_write += line_stream.str();
 		write();
 	}
 }

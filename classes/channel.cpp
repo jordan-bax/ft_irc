@@ -1,6 +1,7 @@
 
 #include "channel.hpp"
 #include "client.hpp"
+#include <algorithm>
 
 channel::channel() {}
 
@@ -41,7 +42,7 @@ void	channel::remove_client(std::string nick_name) {
 
 void	channel::add_operator(client *client) {
 	if (client != NULL)
-		_operators.push_back(client);
+		_operators.push_back(client->get_nick());
 }
 
 bool	channel::user_in_channel(std::string name) {
@@ -49,5 +50,22 @@ bool	channel::user_in_channel(std::string name) {
 		if (client->get_nick() == name)
 			return (true);
 	}
-	false;
+	return (false);
+}
+
+void	channel::send_message(std::string const &sender, std::string const &msg) {
+	for (auto *client: _clients) {
+		if (client->get_nick() != sender)
+			client->receive_message(_name, msg);
+	}
+}
+
+bool	channel::valid_name(std::string name) {
+	if (name.empty() || name.length() > 200)
+		return (false);
+	if (std::string("#&+!").find(name[0]) == std::string::npos)
+		return (false);
+	return std::all_of(name.begin() + 1, name.end(), [](char c) {
+		return std::isalnum(c) || c == '-' || c == '_' || c == '.';
+	});
 }

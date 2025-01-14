@@ -28,6 +28,9 @@ private:
 	void	invite(std::vector<std::string> input, s_env *env);
 	void	topic(std::vector<std::string> input, s_env *env);
 	void	mode(std::vector<std::string> input, s_env *env);
+
+	void	send_usrmsg(std::string const &target, std::string const &msg, s_env *env);
+	void	send_chanmsg(std::string const &target, std::string const &msg, s_env *env);
 public:
 	client();
 	client( int type , int fd );
@@ -41,15 +44,15 @@ public:
 	void	write(void);
 	bool	read(s_env *env);
 
-	std::vector<std::string>	split(std::string const &str, char delimiter);
-
 	std::string	reply_message(messages::Client numeric_reply, std::string const &param);
 	void		send_numeric_reply(int numeric_reply, std::string const &msg);
-	void		receive_message(User_data const &sender, std::string const &msg);
+	void		receive_message(std::string const &sender, std::string const &msg);
 	void		client_message(std::string const &msg);
 
 	std::string	const &get_nick() const {return (_user->get_nickname());}
 	bool	is_registered() const { return (_user != NULL); }
+
+	static std::vector<std::string>	split(std::string const &str, char delimiter);
 };
 
 // std::ostream & operator<<( std::ostream & o, client const & rhs);

@@ -24,7 +24,7 @@ std::vector<std::string>	client::split(std::string const &str, char delimiter) {
 
 void	client::kick(std::vector<std::string> input, s_env *env) {
 	for (auto &channel: env->channels) {
-		std::cout << channel.get_name() << std::endl;
+		std::cout << channel->get_name() << std::endl;
 	}
 }
 
@@ -41,18 +41,30 @@ const std::unordered_map<std::string, client::FunctionPtr> client::functionMap =
 	{"MODE", NULL}
 };
 
-static std::unordered_map<std::string, client::FunctionPtr>::const_iterator verify_input(std::vector<std::string> const &input)
-{
+static std::unordered_map<std::string, client::FunctionPtr>::const_iterator verify_input(std::vector<std::string> const &input) {
 	std::unordered_map<std::string, client::FunctionPtr>::const_iterator i = client::functionMap.find(input.front());
 	if (i == client::functionMap.end())
 		throw(client_exception(messages::Client::ERR_UNKNOWNCOMMAND, input.front()));
 	return (i);
 }
 
-void	client::handle_client_input(s_env *env)
-{
+static std::vector<std::string>	parse_input(std::string buf) {
+	std::string	tmp;
+	std::size_t pos = buf.find(':');
+	if (pos != std::string::npos) {
+		tmp = buf.substr(pos);
+		buf.erase(pos);
+	}
+
+	std::vector<std::string> input = client::split(buf, ' ');
+	if (!tmp.empty())
+		input.push_back(tmp);
+	return (input);
+}
+
+void	client::handle_client_input(s_env *env) {
 	std::unordered_map<std::string, FunctionPtr>::const_iterator i;
-	std::vector<std::string> input = split(buf_read, ' ');
+	std::vector<std::string>	input = parse_input(buf_read);
 
 	if (input.empty())
 		return ;

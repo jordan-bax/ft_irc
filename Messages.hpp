@@ -60,6 +60,7 @@ namespace messages {
 		ERR_NOSUCHNICK = 401,			// returned when nick isn't used
 		ERR_NOTEXTTOSEND = 412,			// returned when user hasn't entered text to send
 
+		ERR_NOSUCHCHANNEL = 403,		// returned when entered channel name is invalid or doesn't exist
 		ERR_INVITEONLYCHAN = 473,		// returned when user tries to enter invite only channel
 		ERR_CHANNELISFULL = 471,		// returned when user tries to enter a channel that is full
 		ERR_BADCHANNELKEY = 475,		// returned when user enters wrong channel key

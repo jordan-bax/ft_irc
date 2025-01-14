@@ -25,6 +25,7 @@ std::string	get_client_message(messages::Client numeric_reply) {
 		{messages::Client::ERR_NEEDMOREPARAMS, " :Not enough parameters"},
 		{messages::Client::ERR_ALREADYREGISTERED, ":Unauthorized command (already registered)"},
 		{messages::Client::ERR_PASSWDMISMATCH, ":Password incorrect"},
+		{messages::Client::ERR_NOSUCHCHANNEL, " :No such channel"},
 		{messages::Client::ERR_INVITEONLYCHAN, " :Cannot join channel (+i)"},
 		{messages::Client::ERR_CHANNELISFULL, " :Cannot join channel (+l)"},
 		{messages::Client::ERR_BADCHANNELKEY, " :Cannot join channel (+k)"},
