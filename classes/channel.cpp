@@ -53,6 +53,14 @@ bool	channel::user_in_channel(std::string name) {
 	return (false);
 }
 
+bool	channel::user_is_operator(std::string name) {
+	for (std::string op: _operators) {
+		if (op == name)
+			return (true);
+	}
+	return (false);
+}
+
 void	channel::send_message(std::string const &sender, std::string const &msg) {
 	for (auto *client: _clients) {
 		if (client->get_nick() != sender)

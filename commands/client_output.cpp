@@ -6,8 +6,11 @@
 
 // TODO: check if write() doesn't create problems elsewhere
 
-std::string	client::reply_message(messages::Client numeric_reply, std::string const &param = "") {
-	std::string	msg = get_client_message(numeric_reply);
+std::string	client::reply_message(client_exception const &e) {
+	messages::Client const	&numeric_reply = e.get_numeric_reply();
+	std::string	const		&p1 = e.get_p1();
+	std::string const		&p2 = e.get_p2();
+	std::string const		&msg = get_client_message(numeric_reply);
 
 	switch (numeric_reply) {
 		case messages::Client::RPL_AWAY:
@@ -23,21 +26,30 @@ std::string	client::reply_message(messages::Client numeric_reply, std::string co
 		case messages::Client::ERR_CHANNELISFULL:
 		case messages::Client::ERR_BADCHANNELKEY:
 		case messages::Client::ERR_TOOMANYCHANNELS:
-			if (param.empty())
+		case messages::Client::ERR_CHANOPRIVSNEEDED:
+		case messages::Client::ERR_NOTONCHANNEL:
+			if (p1.empty())
 				throw(server_exception("Error: missing parameter"));
-			return (param + msg);
+			return (p1 + msg);
 
 		case messages::Client::ERR_NORECIPIENT:
-			if (param.empty())
+			if (p1.empty())
 				throw(server_exception("Error: missing parameter"));
-			return (msg + param);
+			return (msg + p1);
+
+		case messages::Client::ERR_USERNOTINCHANNEL:
+			if (p1.empty() || p2.empty())
+				throw(server_exception("Error: missing 1 or more parameters"));
+			return (p1 + " " + p2 + msg);
 
 		default:
 			return (msg);
 	}
 }
 
-void	client::send_numeric_reply(int numeric_reply, std::string const &msg) {
+void	client::send_numeric_reply(client_exception const &e) {
+	messages::Client	numeric_reply = e.get_numeric_reply();
+	std::string			msg = reply_message(e);
 	std::stringstream	msg_stream;
 	std::stringstream	line_stream;
 	std::string			line;

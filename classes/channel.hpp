@@ -12,7 +12,8 @@ private:
 	std::string		_name;
 	std::string		_password;
 	bool			_invite_only;
-	bool			_topic;
+	bool			_topic_permision;
+	std::string		_topic_msg;
 	unsigned int	_limit;
 	std::vector<client*> _clients;
 	std::vector<std::string> _operators;
@@ -41,6 +42,7 @@ public:
 	void	add_operator(client *client);
 
 	bool	user_in_channel(std::string name);
+	bool	user_is_operator(std::string name);
 
 	void	set_key(std::string key) { _password = key; };
 	bool	check_key(std::string const key) { return (key == _password); }

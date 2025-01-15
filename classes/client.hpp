@@ -1,6 +1,7 @@
 #pragma once
 #include "connection.hpp"
 #include "../Messages.hpp"
+#include "client_exception.hpp"
 #include <unordered_map>
 
 #define SERVER_PASS "password"
@@ -44,8 +45,8 @@ public:
 	void	write(void);
 	bool	read(s_env *env);
 
-	std::string	reply_message(messages::Client numeric_reply, std::string const &param);
-	void		send_numeric_reply(int numeric_reply, std::string const &msg);
+	std::string	reply_message(client_exception const &e);
+	void		send_numeric_reply(client_exception const &e);
 	void		receive_message(std::string const &sender, std::string const &msg);
 	void		client_message(std::string const &msg);
 

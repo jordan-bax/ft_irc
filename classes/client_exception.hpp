@@ -6,20 +6,18 @@
 
 class client_exception: public std::exception {
 	private:
-		std::string			param;
-		messages::Client	numeric_reply;
+		std::string			_p1;
+		std::string			_p2;
+		messages::Client	_numeric_reply;
 
 	public:
-		explicit client_exception(messages::Client numeric_reply, std::string param): numeric_reply(numeric_reply), param(param) {}
-		explicit client_exception(messages::Client numeric_reply): numeric_reply(numeric_reply), param("") {}
-		
-		const char *what() const noexcept override {
-			return (param.c_str());
-		}
+		explicit client_exception(messages::Client numeric_reply, std::string p1, std::string p2): _numeric_reply(numeric_reply), _p1(p1), _p2(p2) {}
+		explicit client_exception(messages::Client numeric_reply, std::string param): _numeric_reply(numeric_reply), _p1(param) {}
+		explicit client_exception(messages::Client numeric_reply): _numeric_reply(numeric_reply) {}
 
-		messages::Client get_numeric_reply() const {
-        	return numeric_reply;
-    	}
+		messages::Client const	&get_numeric_reply() const { return _numeric_reply; }
+		std::string const 		&get_p1() const { return _p1; }
+		std::string const 		&get_p2() const { return _p2; }
 };
 
 #endif
