@@ -14,6 +14,7 @@ std::string	client::reply_message(client_exception const &e) {
 
 	switch (numeric_reply) {
 		case messages::Client::RPL_AWAY:
+		case messages::Client::RPL_NOTOPIC:
 		case messages::Client::ERR_NOSUCHNICK:
 		case messages::Client::ERR_CANNOTSENDTOCHAN:
 		case messages::Client::ERR_UNKNOWNCOMMAND:
@@ -41,6 +42,11 @@ std::string	client::reply_message(client_exception const &e) {
 			if (p1.empty() || p2.empty())
 				throw(server_exception("Error: missing 1 or more parameters"));
 			return (p1 + " " + p2 + msg);
+
+		case messages::Client::RPL_TOPIC:
+			if (p1.empty() || p2.empty())
+				throw(server_exception("Error: missing 1 or more parameters"));
+			return (p1 + msg + p2);
 
 		default:
 			return (msg);

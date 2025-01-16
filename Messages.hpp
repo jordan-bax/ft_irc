@@ -44,6 +44,8 @@ namespace messages {
 		RPL_CREATED = 3,
 		RPL_MYINFO = 4,
 		RPL_AWAY = 301,
+		RPL_NOTOPIC = 331,
+		RPL_TOPIC = 332,
 		ERR_UNKNOWNCOMMAND = 421,		// unknown command
 
 		ERR_NONICKNAMEGIVEN = 431,		// returned when nickname parameter is missing

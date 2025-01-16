@@ -31,7 +31,7 @@ const std::unordered_map<std::string, client::FunctionPtr> client::functionMap =
 	{"PASS", &client::pass},
 	{"KICK", &client::kick},
 	{"INVITE", NULL},
-	{"TOPIC", NULL},
+	{"TOPIC", &client::topic},
 	{"MODE", NULL}
 };
 
@@ -43,6 +43,8 @@ static std::unordered_map<std::string, client::FunctionPtr>::const_iterator veri
 }
 
 static std::vector<std::string>	parse_input(std::string buf) {
+	buf.erase(buf.find('\n'), 1);
+	
 	std::string	tmp;
 	std::size_t pos = buf.find(':');
 	if (pos != std::string::npos) {

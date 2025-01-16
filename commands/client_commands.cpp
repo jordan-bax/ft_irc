@@ -65,9 +65,6 @@ void client::user(std::vector<std::string> input, s_env *env) {
 		throw(client_exception(messages::Client::ERR_NEEDMOREPARAMS));
 	
 	std::string	full_name = input[4].substr(1);
-	for (int i = 5; i < input.size(); i++)
-		full_name += " " + input[i];
-	
 	_user = new User_data(_fd);
 	_user->set_nickname(_tmp_nick);
 	_user->set_fullname(full_name);
@@ -146,4 +143,31 @@ void	client::kick(std::vector<std::string> input, s_env *env) {
 			throw(client_exception(messages::Client::ERR_USERNOTINCHANNEL, user_name, chan_name));
 		channel->remove_client(user_name);
 	}
+}
+
+void	client::topic(std::vector<std::string> input, s_env *env) {
+	if (_user == NULL)
+		throw(client_exception(messages::Client::ERR_NOTREGISTERED));
+	if (input.size() < 2)
+		throw(client_exception(messages::Client::ERR_NEEDMOREPARAMS, input[0]));
+	if (input.size() > 2 && input[2][0] != ':')
+		throw(client_exception(messages::Client::ERR_NEEDMOREPARAMS, input[0]));
+
+	channel *channel = search_channel(env, input[1]);
+	if (!channel)
+		throw(client_exception(messages::Client::ERR_NOSUCHCHANNEL, input[1]));
+	if (input.size() < 3) {
+		if (channel->get_topic().empty())
+			throw(client_exception(messages::Client::RPL_NOTOPIC, channel->get_name()));
+		throw(client_exception(messages::Client::RPL_TOPIC, channel->get_name(), channel->get_topic()));
+	}
+	if (!channel->user_is_operator(get_nick()) && channel->get_topic_permission())
+		throw(client_exception(messages::Client::ERR_CHANOPRIVSNEEDED, channel->get_name()));
+	
+	std::string new_topic = input[2].substr(1);
+	if (new_topic.length() < 1) {
+		channel->clear_topic();
+		return ;
+	}
+	channel->set_topic(new_topic);
 }
