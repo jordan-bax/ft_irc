@@ -52,7 +52,7 @@ channel *search_channel(s_env *env, std::string name) {
 
 channel	*new_channel(s_env *env, std::string name, client *creator, std::string key) {
 	if (channel_exists(env, name))
-		throw(client_exception(messages::Client::ERR_UNAVAILRESOURCE, name));
+		throw(client_exception(messages::Client::ERR_UNAVAILRESOURCE, {name}));
 	channel *new_channel = new channel(name);
 	new_channel->add_client(creator);
 	new_channel->add_operator(creator);
@@ -65,19 +65,21 @@ channel	*new_channel(s_env *env, std::string name, client *creator, std::string 
 // change behavior when user is already in channel
 channel *join_channel(s_env *env, std::string name, client *client, std::string key) {
 	if (!channel_exists(env, name))
-		throw(client_exception(messages::Client::ERR_NOSUCHCHANNEL, name));
+		throw(client_exception(messages::Client::ERR_NOSUCHCHANNEL, {name}));
 
 	for (auto *channel: env->channels) {
 		if (channel->get_name() == name) {
-			if (!channel->check_key(key))
-				throw(client_exception(messages::Client::ERR_BADCHANNELKEY, name));
+			if (!channel->check_key(key) && !channel->user_is_invited(client->get_nick()))
+				throw(client_exception(messages::Client::ERR_BADCHANNELKEY, {name}));
 			if (channel->user_in_channel(client->get_nick()))
-				throw(client_exception(messages::Client::ERR_UNAVAILRESOURCE, channel->get_name()));
+				throw(client_exception(messages::Client::ERR_UNAVAILRESOURCE, {channel->get_name()}));
 			if (channel->is_full())
-				throw(client_exception(messages::Client::ERR_CHANNELISFULL, channel->get_name()));
-			if (channel->get_invonly())
-				throw(client_exception(messages::Client::ERR_INVITEONLYCHAN, channel->get_name()));
+				throw(client_exception(messages::Client::ERR_CHANNELISFULL, {channel->get_name()}));
+			if (channel->get_invonly() && !channel->user_is_invited(client->get_nick()))
+				throw(client_exception(messages::Client::ERR_INVITEONLYCHAN, {channel->get_name()}));
 			channel->add_client(client);
+			if (channel->user_is_invited(client->get_nick()))
+				channel->remove_invite(client->get_nick());
 			return (channel);
 		}
 	}

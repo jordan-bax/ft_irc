@@ -45,8 +45,10 @@ public:
 	void	write(void);
 	bool	read(s_env *env);
 
+	std::string	build_reply_message(messages::Client code, std::string const &msg, std::vector<std::string> params);
 	std::string	reply_message(client_exception const &e);
 	void		send_numeric_reply(client_exception const &e);
+	void		send_numeric_reply(messages::Client code, std::string const &msg, std::vector<std::string> params);
 	void		receive_message(std::string const &sender, std::string const &msg);
 	void		client_message(std::string const &msg);
 

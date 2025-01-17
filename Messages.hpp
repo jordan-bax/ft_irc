@@ -46,6 +46,7 @@ namespace messages {
 		RPL_AWAY = 301,
 		RPL_NOTOPIC = 331,
 		RPL_TOPIC = 332,
+		RPL_INVITING = 341,
 		ERR_UNKNOWNCOMMAND = 421,		// unknown command
 
 		ERR_NONICKNAMEGIVEN = 431,		// returned when nickname parameter is missing
@@ -70,7 +71,9 @@ namespace messages {
 
 		ERR_USERNOTINCHANNEL = 441,		// returned when requested user isn't in channel
 		ERR_NOTONCHANNEL = 442,			// returned when user isn't in entered channel
-		ERR_CHANOPRIVSNEEDED = 482		// returned when user tries to do operation only allowed by operators
+		ERR_CHANOPRIVSNEEDED = 482,		// returned when user tries to do operation only allowed by operators
+
+		ERR_USERONCHANNEL = 443			// returned when trying to invite user already in channel
 	};
 
 	namespace server {

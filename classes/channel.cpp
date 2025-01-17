@@ -46,6 +46,13 @@ void	channel::add_operator(client *client) {
 		_operators.push_back(client->get_nick());
 }
 
+void	channel::remove_invite(std::string name) {
+	for (int i = 0; i < _invites.size(); i++) {
+		if (_invites[i] == name)
+			_invites.erase(_invites.begin() + i);
+	}
+}
+
 bool	channel::user_in_channel(std::string name) {
 	for (client *client: _clients) {
 		if (client->get_nick() == name)
@@ -57,6 +64,14 @@ bool	channel::user_in_channel(std::string name) {
 bool	channel::user_is_operator(std::string name) {
 	for (std::string op: _operators) {
 		if (op == name)
+			return (true);
+	}
+	return (false);
+}
+
+bool	channel::user_is_invited(std::string name) {
+	for (std::string user: _invites) {
+		if (user == name)
 			return (true);
 	}
 	return (false);

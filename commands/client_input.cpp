@@ -30,7 +30,7 @@ const std::unordered_map<std::string, client::FunctionPtr> client::functionMap =
 	{"NICK", &client::nick},
 	{"PASS", &client::pass},
 	{"KICK", &client::kick},
-	{"INVITE", NULL},
+	{"INVITE", &client::invite},
 	{"TOPIC", &client::topic},
 	{"MODE", NULL}
 };
@@ -38,7 +38,7 @@ const std::unordered_map<std::string, client::FunctionPtr> client::functionMap =
 static std::unordered_map<std::string, client::FunctionPtr>::const_iterator verify_input(std::vector<std::string> const &input) {
 	std::unordered_map<std::string, client::FunctionPtr>::const_iterator i = client::functionMap.find(input.front());
 	if (i == client::functionMap.end())
-		throw(client_exception(messages::Client::ERR_UNKNOWNCOMMAND, input.front()));
+		throw(client_exception(messages::Client::ERR_UNKNOWNCOMMAND, {input.front()}));
 	return (i);
 }
 

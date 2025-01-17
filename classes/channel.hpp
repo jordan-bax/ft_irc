@@ -17,6 +17,7 @@ private:
 	unsigned int	_limit;
 	std::vector<client*> _clients;
 	std::vector<std::string> _operators;
+	std::vector<std::string> _invites;
 
 	channel();
 
@@ -40,9 +41,11 @@ public:
 	void	add_client(client *client);
 	void	remove_client(std::string nick_name);
 	void	add_operator(client *client);
+	void	remove_invite(std::string name);
 
 	bool	user_in_channel(std::string name);
 	bool	user_is_operator(std::string name);
+	bool	user_is_invited(std::string name);
 
 	void	set_key(std::string key) { _password = key; };
 	bool	check_key(std::string const key) { return (key == _password); }
@@ -53,6 +56,7 @@ public:
 	bool const			get_topic_permission() const { return (_topic_permision); }
 	unsigned int const	is_full() const { return (_clients.size() >= _limit); }
 	bool const			&get_invonly() const { return (_invite_only); }
+	void				add_invite(std::string user_name) { _invites.push_back(user_name); };
 
 	void	send_message(std::string const &sender, std::string const &msg);
 

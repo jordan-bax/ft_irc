@@ -14,6 +14,7 @@ std::string	get_client_message(messages::Client numeric_reply) {
 		{messages::Client::RPL_AWAY, " :User is currently offline"},
 		{messages::Client::RPL_NOTOPIC, " :No topic is set"},
 		{messages::Client::RPL_TOPIC, " :"},
+		{messages::Client::RPL_INVITING, " :"},
 		{messages::Client::ERR_NOSUCHNICK, " :No such nick/channel"},
 		{messages::Client::ERR_CANNOTSENDTOCHAN, " :Cannot send to channel"},
 		{messages::Client::ERR_NORECIPIENT, ":No recipient given "},
@@ -34,7 +35,8 @@ std::string	get_client_message(messages::Client numeric_reply) {
 		{messages::Client::ERR_TOOMANYCHANNELS, " :You have joined too many channels"},
 		{messages::Client::ERR_USERNOTINCHANNEL, " :They aren't on that channel"},
 		{messages::Client::ERR_NOTONCHANNEL, " :You're not on that channel"},
-		{messages::Client::ERR_CHANOPRIVSNEEDED, " :You're not channel operator"}
+		{messages::Client::ERR_CHANOPRIVSNEEDED, " :You're not channel operator"},
+		{messages::Client::ERR_USERONCHANNEL, " :User is already on channel"}
 	};
 
 	auto it = reply_map.find(numeric_reply);
