@@ -24,16 +24,16 @@
 # define NO_NAME  "Anonymous\n"
 
 class connection;
-struct s_env;
-typedef struct	s_fd
-{
-  int	type;
-  User_data *user;
-  void	(*fct_read)(s_env*, int); // = client read
-  void	(*fct_write)(s_env* , int); // = client write
-  std::string	buf_read;
-  std::string	buf_write;
-}		t_fd;
+// struct s_env;
+// typedef struct	s_fd
+// {
+//   int	type;
+//   User_data *user;
+//   void	(*fct_read)(s_env*, int); // = client read
+//   void	(*fct_write)(s_env* , int); // = client write
+//   std::string	buf_read;
+//   std::string	buf_write;
+// }		t_fd;
 
 typedef struct	s_env
 {
