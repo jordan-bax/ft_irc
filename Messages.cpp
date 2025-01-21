@@ -12,6 +12,9 @@ std::string	get_client_message(messages::Client numeric_reply) {
 		{messages::Client::RPL_CREATED, ":This server was created <date>"},
 		{messages::Client::RPL_MYINFO, ":<servername> <version> <available user modes> <available channel modes>"},
 		{messages::Client::RPL_AWAY, " :User is currently offline"},
+		{messages::Client::RPL_NOTOPIC, " :No topic is set"},
+		{messages::Client::RPL_TOPIC, " :"},
+		{messages::Client::RPL_INVITING, " :"},
 		{messages::Client::ERR_NOSUCHNICK, " :No such nick/channel"},
 		{messages::Client::ERR_CANNOTSENDTOCHAN, " :Cannot send to channel"},
 		{messages::Client::ERR_NORECIPIENT, ":No recipient given "},
@@ -25,10 +28,15 @@ std::string	get_client_message(messages::Client numeric_reply) {
 		{messages::Client::ERR_NEEDMOREPARAMS, " :Not enough parameters"},
 		{messages::Client::ERR_ALREADYREGISTERED, ":Unauthorized command (already registered)"},
 		{messages::Client::ERR_PASSWDMISMATCH, ":Password incorrect"},
+		{messages::Client::ERR_NOSUCHCHANNEL, " :No such channel"},
 		{messages::Client::ERR_INVITEONLYCHAN, " :Cannot join channel (+i)"},
 		{messages::Client::ERR_CHANNELISFULL, " :Cannot join channel (+l)"},
 		{messages::Client::ERR_BADCHANNELKEY, " :Cannot join channel (+k)"},
-		{messages::Client::ERR_TOOMANYCHANNELS, " :You have joined too many channels"}
+		{messages::Client::ERR_TOOMANYCHANNELS, " :You have joined too many channels"},
+		{messages::Client::ERR_USERNOTINCHANNEL, " :They aren't on that channel"},
+		{messages::Client::ERR_NOTONCHANNEL, " :You're not on that channel"},
+		{messages::Client::ERR_CHANOPRIVSNEEDED, " :You're not channel operator"},
+		{messages::Client::ERR_USERONCHANNEL, " :User is already on channel"}
 	};
 
 	auto it = reply_map.find(numeric_reply);

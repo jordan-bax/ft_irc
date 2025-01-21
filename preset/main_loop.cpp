@@ -12,6 +12,7 @@ void	main_loop(t_env *e)
 		check_fd(e);
 	}
 	connection::clear(e->connections);
+	channel::clear(e->channels);
 	
 	// server_close(e);
 }

@@ -38,7 +38,7 @@ class connection;
 typedef struct	s_env
 {
   std::vector<connection*> connections;
-  std::vector<channel>    channels;
+  std::vector<channel*>    channels;
   // t_fd		*fds; // malloc * maxfd
   int		port; // the port to lissen
   int		maxfd; // set resource soft limits

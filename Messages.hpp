@@ -44,6 +44,9 @@ namespace messages {
 		RPL_CREATED = 3,
 		RPL_MYINFO = 4,
 		RPL_AWAY = 301,
+		RPL_NOTOPIC = 331,
+		RPL_TOPIC = 332,
+		RPL_INVITING = 341,
 		ERR_UNKNOWNCOMMAND = 421,		// unknown command
 
 		ERR_NONICKNAMEGIVEN = 431,		// returned when nickname parameter is missing
@@ -60,10 +63,17 @@ namespace messages {
 		ERR_NOSUCHNICK = 401,			// returned when nick isn't used
 		ERR_NOTEXTTOSEND = 412,			// returned when user hasn't entered text to send
 
+		ERR_NOSUCHCHANNEL = 403,		// returned when entered channel name is invalid or doesn't exist
 		ERR_INVITEONLYCHAN = 473,		// returned when user tries to enter invite only channel
 		ERR_CHANNELISFULL = 471,		// returned when user tries to enter a channel that is full
 		ERR_BADCHANNELKEY = 475,		// returned when user enters wrong channel key
-		ERR_TOOMANYCHANNELS = 405		// returned when user has already enterd max channel count
+		ERR_TOOMANYCHANNELS = 405,		// returned when user has already enterd max channel count
+
+		ERR_USERNOTINCHANNEL = 441,		// returned when requested user isn't in channel
+		ERR_NOTONCHANNEL = 442,			// returned when user isn't in entered channel
+		ERR_CHANOPRIVSNEEDED = 482,		// returned when user tries to do operation only allowed by operators
+
+		ERR_USERONCHANNEL = 443			// returned when trying to invite user already in channel
 	};
 
 	namespace server {

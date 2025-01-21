@@ -67,8 +67,7 @@ bool	client::read(s_env *env){
 		std::cout << e.what();
 	}
 	catch(const client_exception& e) {
-		messages::Client numeric_reply = e.get_numeric_reply();
-		send_numeric_reply(numeric_reply, reply_message(numeric_reply, e.what()));
+		send_numeric_reply(e);
 	}
 	
 	return true;
