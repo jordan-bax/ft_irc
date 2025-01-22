@@ -5,7 +5,11 @@
 #include "../classes/client_exception.hpp"
 #include "temporary.hpp"
 #include <sstream>
+#include <algorithm>
 #include <map>
+#include <limits>
+#include <unordered_map>
+#include <functional>
 
 // TODO: check if client allows custom numeric codes
 
@@ -63,7 +67,9 @@ void client::user(std::vector<std::string> input, s_env *env) {
 		throw(client_exception(messages::Client::ERR_NOTREGISTERED));
 	if (input[4][0] != ':')
 		throw(client_exception(messages::Client::ERR_NEEDMOREPARAMS));
-	
+	if (!nick_available(env, _tmp_nick))
+		throw(client_exception(messages::Client::ERR_NICKNAMEINUSE, {_tmp_nick}));
+
 	std::string	full_name = input[4].substr(1);
 	_user = new User_data(_fd);
 	_user->set_nickname(_tmp_nick);
@@ -199,4 +205,102 @@ void	client::invite(std::vector<std::string> input, s_env *env) {
 	channel->add_invite(input[1]);
 	client->send_numeric_reply(messages::Client::RPL_INVITING, "", {get_nick(), client->get_nick(), channel->get_name()});
 	send_numeric_reply(messages::Client::RPL_INVITING, "", {get_nick(), client->get_nick(), channel->get_name()});
+}
+
+void	handle_i(std::vector<std::string> input, channel *chan) {
+	if (input[2][0] == '-')
+		chan->set_invonly(false);
+	else
+		chan->set_invonly(true);
+}
+
+void	handle_t(std::vector<std::string> input, channel *chan) {
+	if (input[2][0] == '-')
+		chan->set_topic_permission(false);
+	else
+		chan->set_topic_permission(true);
+}
+
+void	handle_k(std::vector<std::string> input, channel *chan) {
+	if (input[2][0] == '-' && chan->check_key(""))
+		return ;
+	if (input.size() < 4)
+		throw(client_exception(messages::Client::ERR_NEEDMOREPARAMS, {input[2]}));
+	if (input[2][0] == '-') {
+		if (!chan->check_key(input[3]))
+			throw(client_exception(messages::Client::ERR_BADCHANNELKEY, {chan->get_name()}));
+		chan->set_key("");
+		return ;
+	}
+	chan->set_key(input[3]);
+}
+
+void	handle_o(std::vector<std::string> input, channel *chan) {
+	if (input.size() < 4)
+		throw(client_exception(messages::Client::ERR_NEEDMOREPARAMS, {input[2]}));
+	if (!chan->user_in_channel(input[3]))
+		throw(client_exception(messages::Client::ERR_USERNOTINCHANNEL, {input[3], chan->get_name()}));
+
+	// Placeholder numeric code
+	if (input[2][0] == '-') {
+		if (!chan->user_is_operator(input[3]))
+			throw(client_exception(messages::Client::ERR_CHANOPRIVSNEEDED, {chan->get_name()}));
+		chan->remove_operator(input[3]);
+		return ;
+	}
+	chan->add_operator(input[3]);
+}
+
+void	handle_l(std::vector<std::string> input, channel *chan) {
+	if (input[2][0] == '-') {
+		chan->set_limit(0);
+		return ;
+	}
+	if (input.size() != 4)
+		throw(client_exception(messages::Client::ERR_NEEDMOREPARAMS, {input[2]}));
+
+	unsigned long new_value = 0;
+    for (char c : input[3]) {
+		if (!std::isdigit(c)) {
+			// Placeholder numeric code
+			throw(client_exception(messages::Client::ERR_NEEDMOREPARAMS, {input[2]}));
+		}
+        new_value = new_value * 10 + (c - '0');
+    }
+	if (new_value > std::numeric_limits<unsigned int>::max()) {
+        throw(client_exception(messages::Client::ERR_NEEDMOREPARAMS, {input[2]}));
+    }
+	chan->set_limit(static_cast<unsigned int>(new_value));
+}
+
+// TODO: add messages to confirm changes to modes
+void	client::mode(std::vector<std::string> input, s_env *env) {
+	if (!_user)
+		throw(client_exception(messages::Client::ERR_NOTREGISTERED));
+	if (input.size() < 3)
+		throw(client_exception(messages::Client::ERR_NEEDMOREPARAMS, {input[0]}));
+	
+	channel	*target_channel = search_channel(env, input[1]);
+	if (!target_channel)
+		throw(client_exception(messages::Client::ERR_NOSUCHCHANNEL, {input[1]}));
+	if (!target_channel->user_is_operator(get_nick()))
+		throw(client_exception(messages::Client::ERR_CHANOPRIVSNEEDED, {target_channel->get_name()}));
+	if (input[2].length() != 2)
+		throw(client_exception(messages::Client::ERR_UNKNOWNMODE, {input[2], target_channel->get_name()}));
+	if (input[2][0] != '-' && input[2][0] != '+')
+		throw(client_exception(messages::Client::ERR_UMODEUNKNOWNFLAG));
+	
+	std::unordered_map<char, std::function<void(std::vector<std::string>, channel *)>> mode_handlers = {
+        {'i', handle_i},
+        {'t', handle_t},
+        {'k', handle_k},
+        {'o', handle_o},
+        {'l', handle_l}
+    };
+
+	char	mode_char = input[2][1];
+	auto	it = mode_handlers.find(mode_char);
+	if (it == mode_handlers.end())
+		throw(client_exception(messages::Client::ERR_UNKNOWNMODE, {input[2], target_channel->get_name()}));
+	it->second(input, target_channel);
 }

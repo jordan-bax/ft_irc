@@ -73,7 +73,10 @@ namespace messages {
 		ERR_NOTONCHANNEL = 442,			// returned when user isn't in entered channel
 		ERR_CHANOPRIVSNEEDED = 482,		// returned when user tries to do operation only allowed by operators
 
-		ERR_USERONCHANNEL = 443			// returned when trying to invite user already in channel
+		ERR_USERONCHANNEL = 443,		// returned when trying to invite user already in channel
+
+		ERR_UNKNOWNMODE = 472,			// returned when user entered unknown mode
+		ERR_UMODEUNKNOWNFLAG = 501		// returned when user entered wrong mode flag
 	};
 
 	namespace server {

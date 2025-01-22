@@ -41,9 +41,15 @@ void	channel::remove_client(std::string nick_name) {
 	}
 }
 
-void	channel::add_operator(client *client) {
-	if (client != NULL)
-		_operators.push_back(client->get_nick());
+void	channel::add_operator(std::string user_name) {
+	_operators.push_back(user_name);
+}
+
+void	channel::remove_operator(std::string user_name) {
+	for (int i = 0; i < _operators.size(); i++) {
+		if (_operators[i] == user_name)
+			_operators.erase(_operators.begin() + i);
+	}
 }
 
 void	channel::remove_invite(std::string name) {
@@ -74,6 +80,14 @@ bool	channel::user_is_invited(std::string name) {
 		if (user == name)
 			return (true);
 	}
+	return (false);
+}
+
+bool const	channel::is_full() const {
+	if (_limit == 0)
+		return (false);
+	if (_clients.size() >= _limit)
+		return (true);
 	return (false);
 }
 

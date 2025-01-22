@@ -55,7 +55,7 @@ channel	*new_channel(s_env *env, std::string name, client *creator, std::string 
 		throw(client_exception(messages::Client::ERR_UNAVAILRESOURCE, {name}));
 	channel *new_channel = new channel(name);
 	new_channel->add_client(creator);
-	new_channel->add_operator(creator);
+	new_channel->add_operator(creator->get_nick());
 	new_channel->set_key(key);
 	env->channels.push_back(new_channel);
 	return (new_channel);

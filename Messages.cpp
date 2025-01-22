@@ -36,7 +36,9 @@ std::string	get_client_message(messages::Client numeric_reply) {
 		{messages::Client::ERR_USERNOTINCHANNEL, " :They aren't on that channel"},
 		{messages::Client::ERR_NOTONCHANNEL, " :You're not on that channel"},
 		{messages::Client::ERR_CHANOPRIVSNEEDED, " :You're not channel operator"},
-		{messages::Client::ERR_USERONCHANNEL, " :User is already on channel"}
+		{messages::Client::ERR_USERONCHANNEL, " :User is already on channel"},
+		{messages::Client::ERR_UNKNOWNMODE, " :is unknown mode to me for "},
+		{messages::Client::ERR_UMODEUNKNOWNFLAG, ":Unknown MODE flag"}
 	};
 
 	auto it = reply_map.find(numeric_reply);

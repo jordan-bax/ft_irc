@@ -41,6 +41,7 @@ std::string	client::build_reply_message(messages::Client code, std::string const
 			return (params[0] + " " + params[1] + msg);
 
 		case messages::Client::RPL_TOPIC:
+		case messages::Client::ERR_UNKNOWNMODE:
 			if (params.size() < 2)
 				throw(server_exception("Error: missing 1 or more parameters"));
 			return (params[0] + msg + params[1]);

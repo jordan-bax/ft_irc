@@ -7,3 +7,5 @@ TODO:
 User and nick functions
 Fill in the emtpy <> params in messages
 Make sure client is removed from channel when disconnecting
+
+Check connection with nc -C. IOT instruction (core dumped)
