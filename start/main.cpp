@@ -5,7 +5,7 @@ int main(int argc, char const *argv[])
 {
 	env e;
 
-	if(e.set_env(argv[1]))
+	if(!e.set_env(argv[1]))
 		return 1;
 	init_signalHandling();
 	std::cout << "server is now listening to port "<< e.get_port() << " and hostname "<< e.get_hostname()<< std::endl;

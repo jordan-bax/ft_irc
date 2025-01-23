@@ -4,7 +4,7 @@
 
 // Define the function pointer type (e.g., functions taking no parameters and returning void)
 using FunctionPtr = void (*)();
-// using FunctionPtr = void	(*fct_write)(s_env* , int);
+// using FunctionPtr = void	(*fct_write)(env* , int);
 
 // Example functions to be stored in the map
 void functionA() {

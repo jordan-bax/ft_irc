@@ -40,8 +40,9 @@ void	client::write(void){
 // 	}
 // 	return true;
 // }
+void print_ascii(std::string s){for (int i: s){std::cout << i << " " << static_cast<char>(i) << " ";}std::cout <<'\n';}
 
-bool	client::read(s_env *env){
+bool	client::read(env &server_env){
 	int		i;
 	int		r;
 	char	buf_read[BUF_SIZE + 1];
@@ -51,17 +52,24 @@ bool	client::read(s_env *env){
 	{
 		std::cout << "client #" << this->_fd << "gone away"<< std::endl;
 		close(this->_fd);
-		// std::vector<connection*>::iterator it = connection::find(env->connections.begin(), env->connections.end(), this->_fd);
-		// delete (*it);
-		// it = 0;
-		// env->connections.erase(it);
 		return false;
 	}
 	buf_read[r] = '\0';
 	std::cout << "get read" <<" > "<< buf_read << " read\n";
 	this->buf_read = buf_read;
 	try {
-		handle_client_input(env);
+		std::vector<std::string> ss = this->split(this->buf_read, '\n');
+		for (auto pp : ss)
+		{
+			if (pp.back()== '\r')
+				pp.pop_back();
+			this->buf_read = pp + '\n';
+			std::cout << this->buf_read << ss.size()<< std::endl;
+			// print_ascii(this->buf_read);
+			// print_ascii(pp);
+			// print_ascii(ss[0]);
+			handle_client_input(server_env);
+		}
 	}
 	catch(const server_exception& e) {
 		std::cout << e.what();
@@ -72,11 +80,3 @@ bool	client::read(s_env *env){
 	
 	return true;
 }
-
-// client & client::operator=( client const & rhs ) {
-	
-// }
-// std::ostream & operator<<( std::ostream & o, client const & rhs) {
-// 	o << rhs.getName();
-// 	return o;
-// }

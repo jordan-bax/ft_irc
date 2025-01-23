@@ -14,7 +14,7 @@ public:
 	~term_reader();
 
 	void	write(void);
-	bool	read(s_env *env);
+	bool	read(env &server_env);
 	
 };
 

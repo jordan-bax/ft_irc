@@ -7,6 +7,10 @@
 #include <netinet/in.h>
 #include "../classes/server.hpp"
 #include "../classes/term_reader.hpp"
+#include "../classes/client_exception.hpp"
+#include "../Messages.hpp"
+#include "client.hpp"
+#include "channel.hpp"
 
 env::env() {
 	std::cout << "env made" << std::endl;
@@ -49,14 +53,16 @@ bool	env::set_host() {
 	{
 		char hostname[1000];
 		if (-1 == gethostname(hostname,1000))
-			throw;
+			throw std::bad_exception();
 		this->_hostname = hostname;
+		// std::cout << hostname << std::endl;
 	}
 	catch(const std::exception& e)
 	{
 		std::cerr << e.what() << '\n';
+		return false;
 	}
-	
+	return true;
 }
 bool	env::set_limit() {
 	try
@@ -83,6 +89,7 @@ bool env::set_env(std::string port) {
 		return false;
 	if (!set_server())
 		return false;
+	// std::cout << "test\n";
 	return true;
 }
 bool env::set_server() {
@@ -121,7 +128,7 @@ int			env::get_port() const{
 std::vector<connection*>&	env::get_connections(){
 	return this->connections;
 }
-std::vector<channel>&		env::get_channels(){
+std::vector<channel*>&		env::get_channels(){
 	return this->channels;
 }
 void	env::init_fd()
@@ -162,6 +169,7 @@ void	env::check_fd()
 	{
 		if (this->connections[i] && FD_ISSET(this->connections[i]->get_fd(), &this->_fd_read))
 		{
+			std::cout << "test\n";
 			if (!this->connections[i]->read(*this))
 			{
 				delete this->connections[i];
@@ -187,4 +195,87 @@ void	env::check_fd()
 	// {
 
 	// }
+}
+
+std::vector<client*> env::get_clients() {
+	std::vector<client*> clients;
+
+	for (auto &connection : this->connections) {
+		if (connection->get_type() == FD_CLIENT) {
+			if (client* client_ptr = dynamic_cast<client*>(connection)) {
+				clients.push_back(client_ptr);
+			}
+		}
+	}
+	return (clients);
+}
+
+client	*env::search_client_nick( std::string nick_name)
+{
+	std::vector<client*> clients = get_clients();
+
+	for (auto *client: clients) {
+		if (client->is_registered() && client->get_nick() == nick_name)
+			return (client);
+	}
+	return (NULL);
+}
+
+bool	env::nick_available( std::string nick_name)
+{
+	std::vector<client*> clients = get_clients();
+
+	for (auto *temp_client: clients) {
+		if (temp_client->is_registered() && temp_client->get_nick() == nick_name)
+			return (false);
+	}
+	return (true);
+}
+
+bool	env::channel_exists( std::string name) {
+	return (search_channel( name) != NULL);
+}
+
+channel *env::search_channel( std::string name) {
+	for (auto *channel: (this->channels)) {
+		if (channel->get_name() == name)
+			return (channel);
+	}
+	return (NULL);
+}
+
+channel	*env::new_channel(std::string name, client *creator, std::string key) {
+	if (channel_exists( name))
+		throw(client_exception(messages::Client::ERR_UNAVAILRESOURCE, {name}));
+	channel *new_channel = new channel(name);
+	new_channel->add_client(creator);
+	new_channel->add_operator(creator->get_nick());
+	new_channel->set_key(key);
+	this->channels.push_back(new_channel);
+	return (new_channel);
+}
+
+// TODO: alot (check for key for example)
+// change behavior when user is already in channel
+channel *env::join_channel(std::string name, client *client, std::string key) {
+	if (!channel_exists( name))
+		throw(client_exception(messages::Client::ERR_NOSUCHCHANNEL, {name}));
+
+	for (auto *channel: this->channels) {
+		if (channel->get_name() == name) {
+			if (!channel->check_key(key) && !channel->user_is_invited(client->get_nick()))
+				throw(client_exception(messages::Client::ERR_BADCHANNELKEY, {name}));
+			if (channel->user_in_channel(client->get_nick()))
+				throw(client_exception(messages::Client::ERR_UNAVAILRESOURCE, {channel->get_name()}));
+			if (channel->is_full())
+				throw(client_exception(messages::Client::ERR_CHANNELISFULL, {channel->get_name()}));
+			if (channel->get_invonly() && !channel->user_is_invited(client->get_nick()))
+				throw(client_exception(messages::Client::ERR_INVITEONLYCHAN, {channel->get_name()}));
+			channel->add_client(client);
+			if (channel->user_is_invited(client->get_nick()))
+				channel->remove_invite(client->get_nick());
+			return (channel);
+		}
+	}
+	return (NULL);
 }

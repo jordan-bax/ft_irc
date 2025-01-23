@@ -58,7 +58,7 @@ static std::vector<std::string>	parse_input(std::string buf) {
 	return (input);
 }
 
-void	client::handle_client_input(s_env *env) {
+void	client::handle_client_input(env &server_env) {
 	std::unordered_map<std::string, FunctionPtr>::const_iterator i;
 	std::vector<std::string>	input = parse_input(buf_read);
 
@@ -68,5 +68,5 @@ void	client::handle_client_input(s_env *env) {
 	if (i->first != "PASS" && i->first != "HELP" && !_authorised)
 		throw(client_exception(messages::Client::ERR_NOTREGISTERED));
 	if (i->second != NULL)
-		(this->*(i->second))(input, env);
+		(this->*(i->second))(input, server_env);
 }

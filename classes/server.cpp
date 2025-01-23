@@ -21,18 +21,19 @@ void	server::write(void) {
 	std::cout << "server write test [" << _fd << "]\n";
 
 }
-bool	server::read(s_env *env) {
+bool	server::read(env &server_env) {
 	int			cs;
 	struct sockaddr_in	csin;
 	socklen_t		csin_len;
 
+	std::cout << "test1\n";
 	csin_len = sizeof(csin);
 	cs = X(-1, accept(this->_fd, (struct sockaddr*)&csin, &csin_len), "accept");
 	std::cout << "New client #"<<cs <<" from " <<inet_ntoa(csin.sin_addr)<<":"<< ntohs(csin.sin_port)<< std::endl; 
 	// printf("New client #%d from %s:%d\n", cs,
 	// 	inet_ntoa(csin.sin_addr), ntohs(csin.sin_port));
-	env->connections.push_back(new client(FD_CLIENT, cs));
-	env->connections.back()->set_bufwrite(WELCOME);
+	server_env.get_connections().push_back(new client(FD_CLIENT, cs));
+	server_env.get_connections().back()->set_bufwrite(WELCOME);
 	// clean_fd(&e->fds[cs]);
 	// e->fds[cs].type = FD_CLIENT;
 	// e->fds[cs].fct_read = client_read;

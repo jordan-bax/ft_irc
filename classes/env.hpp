@@ -9,7 +9,7 @@ class env
 {
 private:
 	std::vector<connection*> connections;
-	std::vector<channel>    channels;
+	std::vector<channel*>    channels;
 	std::string	_hostname; // hostname of the computer
 	int		_port;// the port to lissen
 	int		_maxfd;// set resource soft limits
@@ -31,11 +31,20 @@ public:
 	std::string	get_hostname() const;
 	int			get_port() const;
 	std::vector<connection*>&	get_connections();
-	std::vector<channel>&		get_channels();
+	std::vector<channel*>&		get_channels();
 //	main loop parts
 	void	init_fd();
 	void	do_select();
 	void	check_fd();
+
+	std::vector<client*> get_clients();
+	client	*search_client_nick( std::string nick_name);
+	bool	nick_available( std::string nick_name);
+
+	bool	channel_exists( std::string name);
+	channel *search_channel( std::string name);
+	channel	*new_channel( std::string name, client *creator, std::string key = "");
+	channel *join_channel( std::string name, client *client, std::string key = "");
 
 	env & operator=( env const & rhs );
 };

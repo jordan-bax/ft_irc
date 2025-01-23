@@ -2,7 +2,7 @@
 #include <iostream>
 #include "../preset/bircd.h"
 
-struct s_env;
+struct env;
 
 class connection
 {
@@ -44,7 +44,7 @@ public:
 	std::string		get_bufwrite()const{return buf_write;};
 	int				get_fd()const{return _fd;};
 	int				get_type()const{return _type;};
-	virtual bool	read(s_env *env) = 0;
+	virtual bool	read(env &server_env) = 0;
 	virtual void	write(void) = 0;
 };
 

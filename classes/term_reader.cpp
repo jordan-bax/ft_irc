@@ -1,5 +1,6 @@
 #include "term_reader.hpp"
 #include <sys/socket.h>
+#include "env.hpp"
 
 term_reader::term_reader() {
 	
@@ -23,7 +24,7 @@ term_reader & term_reader::operator=( term_reader const & rhs ) {
 // 	return o;
 // }
 void	term_reader::write(void) {}
-bool	term_reader::read(s_env *env) {
+bool	term_reader::read(env &server_env) {
 	int	r;
 	int	i;
 	// std::string buf;
@@ -34,14 +35,14 @@ bool	term_reader::read(s_env *env) {
 	if (this->buf_read.size())
 	{
 		i = 0;
-		while (env->connections.size() > i)
+		while (server_env.get_connections().size() > i)
 		{
-			if ((env->connections[i]->get_type() == FD_CLIENT) )
+			if ((server_env.get_connections()[i]->get_type() == FD_CLIENT) )
 			{
 				// std::string message = e->fds[cs].user->massege(e->fds[cs].buf_read);
 				// std::cout <<"massage> " <<message << "size>" << message.size()<< std::endl;
-				send(env->connections[i]->get_fd(), "ADMIN; ",8 , 0);
-				send(env->connections[i]->get_fd(), this->buf_read.c_str(),this->buf_read.size() , 0);
+				// send(server_env.get_connections()[i]->get_fd(), "ADMIN; ",8 , 0);
+				send(server_env.get_connections()[i]->get_fd(), this->buf_read.c_str(),this->buf_read.size() , 0);
 			}
 			i++;
 		}

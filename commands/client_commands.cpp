@@ -13,30 +13,30 @@
 
 // TODO: check if client allows custom numeric codes
 
-void	client::help(std::vector<std::string> input, s_env *env)
+void	client::help(std::vector<std::string> input, env &server_env)
 {
 	client_message(messages::client_message::HELP_MESSAGE);
 }
 
-void	client::send_usrmsg(std::string const &target, std::string const &msg, s_env *env) {
+void	client::send_usrmsg(std::string const &target, std::string const &msg, env &server_env) {
 	client *target_client;
 
-	if (!(target_client = search_client_nick(env, target)))
+	if (!(target_client = server_env.search_client_nick( target)))
 		throw(client_exception(messages::Client::ERR_NOSUCHNICK, {target}));
 	target_client->receive_message(get_nick(), msg);
 }
 
-void	client::send_chanmsg(std::string const &target, std::string const &msg, s_env *env) {
+void	client::send_chanmsg(std::string const &target, std::string const &msg, env &server_env) {
 	channel	*target_channel;
 
-	if (!(target_channel = search_channel(env, target)))
+	if (!(target_channel = server_env.search_channel( target)))
 		throw(client_exception(messages::Client::ERR_NOSUCHCHANNEL, {target}));
 	if (!target_channel->user_in_channel(get_nick()))
 		throw(client_exception(messages::Client::ERR_NOTONCHANNEL, {target}));
 	target_channel->send_message(get_nick(), msg);
 }
 
-void	client::privmsg(std::vector<std::string> input, s_env *env)
+void	client::privmsg(std::vector<std::string> input, env &server_env)
 {
 	if (_user == NULL)
 		throw(client_exception(messages::Client::ERR_NOTREGISTERED));
@@ -53,12 +53,12 @@ void	client::privmsg(std::vector<std::string> input, s_env *env)
 	std::string msg = input[2];
 	msg.erase(msg.begin(), msg.begin() + 1);
 	if (std::string("#&+!").find(input[1][0]) != std::string::npos)
-		send_chanmsg(target, msg, env);
+		send_chanmsg(target, msg, server_env);
 	else
-		send_usrmsg(target, msg, env);
+		send_usrmsg(target, msg, server_env);
 }
 
-void client::user(std::vector<std::string> input, s_env *env) {
+void client::user(std::vector<std::string> input, env &server_env) {
 	if (input.size() < 5)
 		throw(client_exception(messages::Client::ERR_NEEDMOREPARAMS, {input[0]}));
 	if (_user != NULL)
@@ -67,7 +67,7 @@ void client::user(std::vector<std::string> input, s_env *env) {
 		throw(client_exception(messages::Client::ERR_NOTREGISTERED));
 	if (input[4][0] != ':')
 		throw(client_exception(messages::Client::ERR_NEEDMOREPARAMS));
-	if (!nick_available(env, _tmp_nick))
+	if (!server_env.nick_available( _tmp_nick))
 		throw(client_exception(messages::Client::ERR_NICKNAMEINUSE, {_tmp_nick}));
 
 	std::string	full_name = input[4].substr(1);
@@ -77,19 +77,19 @@ void client::user(std::vector<std::string> input, s_env *env) {
 	_user->set_username(input[1]);
 }
 
-void	client::nick(std::vector<std::string> input, s_env *env) {
+void	client::nick(std::vector<std::string> input, env &server_env) {
 	if (_user != NULL)
 		throw(client_exception(messages::Client::ERR_ALREADYREGISTERED));
 	if (input.size() < 2)
 		throw(client_exception(messages::Client::ERR_NONICKNAMEGIVEN));
 	
 	// TODO: throw exception when nick in use, erroneous or blocked
-	if (!nick_available(env, input[1]))
+	if (!server_env.nick_available( input[1]))
 		throw(client_exception(messages::Client::ERR_NICKNAMEINUSE, {input[1]}));
 	_tmp_nick = input[1];
 }
 
-void	client::pass(std::vector<std::string> input, s_env *env) {
+void	client::pass(std::vector<std::string> input, env &server_env) {
 	if (_authorised)
 		throw(client_exception(messages::Client::ERR_ALREADYREGISTERED));
 	if (input.size() < 2)
@@ -99,7 +99,7 @@ void	client::pass(std::vector<std::string> input, s_env *env) {
 	_authorised = true;
 }
 
-void	client::join(std::vector<std::string> input, s_env *env) {
+void	client::join(std::vector<std::string> input, env &server_env) {
 	if (_user == NULL)
 		throw(client_exception(messages::Client::ERR_NOTREGISTERED));
 	if (input.size() < 2)
@@ -114,16 +114,16 @@ void	client::join(std::vector<std::string> input, s_env *env) {
 		std::string key = i < keys.size() ? keys[i] : "";
 		if (!channel::valid_name(channels[i]))
 			throw(client_exception(messages::Client::ERR_NOSUCHCHANNEL, {channels[i]}));
-		if (channel_exists(env, channels[i]))
-			_channels.push_back(join_channel(env, channels[i], this, key));
+		if (server_env.channel_exists( channels[i]))
+			_channels.push_back(server_env.join_channel( channels[i], this, key));
 		else
-			_channels.push_back(new_channel(env, channels[i], this, key));
+			_channels.push_back(server_env.new_channel( channels[i], this, key));
 	}
 }
 
 // TODO: check error for more channel than 1 but not the same users
 // TODO: kick messages when user is kicked from channel
-void	client::kick(std::vector<std::string> input, s_env *env) {
+void	client::kick(std::vector<std::string> input, env &server_env) {
 	if (_user == NULL)
 		throw(client_exception(messages::Client::ERR_NOTREGISTERED));
 	if (input.size() < 3)
@@ -138,7 +138,7 @@ void	client::kick(std::vector<std::string> input, s_env *env) {
 		std::string chan_name = channels.size() > 1 ? channels[i] : channels[0];
 		std::string user_name = users[i];
 
-		channel *channel = search_channel(env, chan_name);
+		channel *channel = server_env.search_channel( chan_name);
 		if (!channel)
 			throw(client_exception(messages::Client::ERR_NOSUCHCHANNEL, {chan_name}));
 		if (!channel->user_in_channel(get_nick()))
@@ -151,7 +151,7 @@ void	client::kick(std::vector<std::string> input, s_env *env) {
 	}
 }
 
-void	client::topic(std::vector<std::string> input, s_env *env) {
+void	client::topic(std::vector<std::string> input, env &server_env) {
 	if (_user == NULL)
 		throw(client_exception(messages::Client::ERR_NOTREGISTERED));
 	if (input.size() < 2)
@@ -159,7 +159,7 @@ void	client::topic(std::vector<std::string> input, s_env *env) {
 	if (input.size() > 2 && input[2][0] != ':')
 		throw(client_exception(messages::Client::ERR_NEEDMOREPARAMS, {input[0]}));
 
-	channel *channel = search_channel(env, input[1]);
+	channel *channel = server_env.search_channel( input[1]);
 	if (!channel)
 		throw(client_exception(messages::Client::ERR_NOSUCHCHANNEL, {input[1]}));
 	if (!channel->user_in_channel(get_nick()))
@@ -180,14 +180,14 @@ void	client::topic(std::vector<std::string> input, s_env *env) {
 	channel->set_topic(new_topic);
 }
 
-void	client::invite(std::vector<std::string> input, s_env *env) {
+void	client::invite(std::vector<std::string> input, env &server_env) {
 	if (_user == NULL)
 		throw(client_exception(messages::Client::ERR_NOTREGISTERED));
 	if (input.size() < 3)
 		throw(client_exception(messages::Client::ERR_NEEDMOREPARAMS, {input[0]}));
 	
-	client	*client = search_client_nick(env, input[1]);
-	channel *channel = search_channel(env, input[2]);
+	client	*client = server_env.search_client_nick( input[1]);
+	channel *channel = server_env.search_channel( input[2]);
 	if (!client)
 		throw(client_exception(messages::Client::ERR_NOSUCHNICK, {input[1]}));
 	if (!channel) {
@@ -274,13 +274,13 @@ void	handle_l(std::vector<std::string> input, channel *chan) {
 }
 
 // TODO: add messages to confirm changes to modes
-void	client::mode(std::vector<std::string> input, s_env *env) {
+void	client::mode(std::vector<std::string> input, env &server_env) {
 	if (!_user)
 		throw(client_exception(messages::Client::ERR_NOTREGISTERED));
 	if (input.size() < 3)
 		throw(client_exception(messages::Client::ERR_NEEDMOREPARAMS, {input[0]}));
 	
-	channel	*target_channel = search_channel(env, input[1]);
+	channel	*target_channel = server_env.search_channel( input[1]);
 	if (!target_channel)
 		throw(client_exception(messages::Client::ERR_NOSUCHCHANNEL, {input[1]}));
 	if (!target_channel->user_is_operator(get_nick()))

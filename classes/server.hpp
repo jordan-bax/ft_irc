@@ -13,7 +13,7 @@ public:
 
 	// server & operator=( server const & rhs );
 	void	write(void);
-	bool	read(s_env *env);
+	bool	read(env &server_env);
 };
 
 // std::ostream & operator<<( std::ostream & o, server const & rhs);
