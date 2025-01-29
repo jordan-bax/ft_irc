@@ -5,15 +5,19 @@
 #include <unistd.h>
 
 client::client() {
-	std::cout << "new client [" << _fd << "]\n";
+	std::cout << "new client [" << _fd << "]"<< std::endl;
 	
 }
 client::client( int type, int fd ) : connection(type, fd) {
-	std::cout << "new client [" << _fd << "]\n";
+	std::cout << "new client [" << _fd << "]"<< std::endl;
+	
+}
+client::client( int type , int fd , std::string addr, uint16_t port) : connection(type, fd), _address(addr), _port(port) {
+	std::cout << "new client [" << _fd << "]"<< this->_address<< std::endl;
 	
 }
 // client::client( client const & src ) {
-// 	std::cout << "new client [" << _fd << "]\n";
+// 	std::cout << "new client [" << _fd << "]"<< std::endl;
 	
 // }
 client::~client() {
@@ -22,7 +26,7 @@ client::~client() {
 	}
 	if (_user)
 		delete(_user);
-	std::cout << "del client [" << _fd << "]\n";
+	std::cout << "del client [" << _fd << "]"<< std::endl;
 }
 void	client::write(void){
 	send(this->_fd, this->buf_write.c_str(), this->buf_write.length(), 0);

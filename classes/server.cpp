@@ -22,24 +22,20 @@ void	server::write(void) {
 
 }
 bool	server::read(env &server_env) {
-	int			cs;
+	int			client_fd;
 	struct sockaddr_in	csin;
 	socklen_t		csin_len;
+	std::string		client_adderess;
+	uint16_t		client_port;
 
 	std::cout << "test1\n";
 	csin_len = sizeof(csin);
-	cs = X(-1, accept(this->_fd, (struct sockaddr*)&csin, &csin_len), "accept");
-	std::cout << "New client #"<<cs <<" from " <<inet_ntoa(csin.sin_addr)<<":"<< ntohs(csin.sin_port)<< std::endl; 
-	// printf("New client #%d from %s:%d\n", cs,
-	// 	inet_ntoa(csin.sin_addr), ntohs(csin.sin_port));
-	server_env.get_connections().push_back(new client(FD_CLIENT, cs));
+	client_fd = X(-1, accept(this->_fd, (struct sockaddr*)&csin, &csin_len), "accept");
+	client_adderess = inet_ntoa(csin.sin_addr);
+	client_port =  ntohs(csin.sin_port);
+	std::cout << "New client #"<< client_fd <<" from " << client_adderess << ":"<< client_port << std::endl; 
+	server_env.get_connections().push_back(new client(FD_CLIENT, client_fd, client_adderess, client_port));
 	server_env.get_connections().back()->set_bufwrite(WELCOME);
-	// clean_fd(&e->fds[cs]);
-	// e->fds[cs].type = FD_CLIENT;
-	// e->fds[cs].fct_read = client_read;
-	// e->fds[cs].fct_write = client_write;
-	// e->fds[cs].user = new User_data(cs);
-	// e->fds[cs].buf_write = WELCOME;
 	return true;
 }
 

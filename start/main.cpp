@@ -1,20 +1,26 @@
-#include "../classes/env.hpp"
-#include "../other/signal.hpp"
+#include <iostream>
+#include <filesystem>
+#define fsize 1000
+void bzero(char *s, size_t n){
+	for (size_t i = 0 ; n > i; i++)
+	{
+		s[i] = '\0';
+	}
+}
 
 int main(int argc, char const *argv[])
 {
-	env e;
-
-	if(!e.set_env(argv[1]))
-		return 1;
-	init_signalHandling();
-	std::cout << "server is now listening to port "<< e.get_port() << " and hostname "<< e.get_hostname()<< std::endl;
-	while (g_saveQuit)
-	{
-		e.init_fd();
-		e.do_select();
-		e.check_fd();
+	FILE * file;
+	FILE * copy;
+	char transfer[fsize];
+	file = fopen(argv[1], "r+");
+	copy = fopen("copy", "w+");
+	bzero(transfer, fsize);
+	while (fread(transfer, sizeof(char), fsize, file)){
+		fwrite(transfer,sizeof(char), fsize, copy);
 	}
-	connection::clear(e.get_connections());
+	fclose(copy);
+	fclose(file);
 	return 0;
+	
 }

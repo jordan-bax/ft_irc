@@ -13,8 +13,12 @@ class client : public connection
 private:
 	bool					_authorised = false;
 	std::string				_tmp_nick;
+	std::string				_address;//  Internet address. 
+	uint16_t				_port;//Port number
 	User_data				*_user = NULL;
 	std::vector<channel*>	_channels;
+
+
 
 	bool	commands();
 	void	handle_client_input(env &server_env);
@@ -33,9 +37,10 @@ private:
 
 	void	send_usrmsg(std::string const &target, std::string const &msg, env &server_env);
 	void	send_chanmsg(std::string const &target, std::string const &msg, env &server_env);
-public:
 	client();
+public:
 	client( int type , int fd );
+	client( int type , int fd , std::string addr, uint16_t port);
 	// client( client const & src );
 	~client();
 
