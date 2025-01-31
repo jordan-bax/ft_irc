@@ -21,11 +21,15 @@ int main(int argc, char const *argv[])
 {
 	env e;
 
-	if(!e.set_env(argv[1]))
+	if (argc != 3 && argc != 2)
+		return 1;	
+	if(argc == 3 && !e.set_env(argv[1], argv[2]))
 		return 1;
-	// std::cout << "test\n";
+	if(argc == 2 && !e.set_env(argv[1], "password"))
+		return 1;
 	init_signalHandling();
-	std::cout << "server is now listening to port "<< e.get_port() << " and host "<< e.get_hostname()<< std::endl;
+	std::cout << "server is now listening to port "<< e.get_port() << " pass "<< e.get_pass()
+		<<" and host "<< e.get_hostname() << "\nCreated on date " << e.get_date()<<  std::endl;
 	while (g_saveQuit)
 	{
 		e.init_fd();

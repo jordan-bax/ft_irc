@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include "env.hpp"
 
-#define SERVER_PASS "password"
+// #define SERVER_PASS "password"
 #define MAX_CHANNELS 5
 
 class client : public connection

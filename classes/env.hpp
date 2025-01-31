@@ -11,6 +11,8 @@ private:
 	std::vector<connection*> connections;
 	std::vector<channel*>    channels;
 	std::string	_hostname; // hostname of the computer
+	std::string	_date; // date = weekday month day hour:minutes:seconds year
+	std::string	_password;
 	int		_port;// the port to lissen
 	int		_maxfd;// set resource soft limits
 	int		_max; // the biggest fd that select will search
@@ -26,12 +28,15 @@ public:
 	bool	set_limit();
 	bool	set_host();
 	bool	set_port(std::string port);
-	bool	set_env(std::string port);
+	bool	set_env(std::string port, std::string password);
 	bool	set_server();
+	std::string	get_pass() const;
 	std::string	get_hostname() const;
 	int			get_port() const;
+	std::string	get_date() const;
 	std::vector<connection*>&	get_connections();
 	std::vector<channel*>&		get_channels();
+
 //	main loop parts
 	void	init_fd();
 	void	do_select();

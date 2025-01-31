@@ -20,7 +20,7 @@
 # define MAX(a,b)	((a > b) ? a : b)
 
 # define USAGE		"Usage: %s port\n"
-# define WELCOME  "Welcome rules \n"
+# define WELCOME  "Welcome rules \n welcome\n"
 # define NO_NAME  "Anonymous\n"
 
 class connection;

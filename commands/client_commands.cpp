@@ -94,7 +94,7 @@ void	client::pass(std::vector<std::string> input, env &server_env) {
 		throw(client_exception(messages::Client::ERR_ALREADYREGISTERED));
 	if (input.size() < 2)
 		throw(client_exception(messages::Client::ERR_NEEDMOREPARAMS, {input[0]}));
-	if (input[1] != SERVER_PASS)
+	if (input[1] != server_env.get_pass())
 		throw(client_exception(messages::Client::ERR_PASSWDMISMATCH));
 	_authorised = true;
 }

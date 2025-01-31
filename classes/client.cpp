@@ -28,9 +28,22 @@ client::~client() {
 		delete(_user);
 	std::cout << "del client [" << _fd << "]"<< std::endl;
 }
+static std::string	get_line(std::string &tekst) {
+	std::string line;
+	size_t		pos = tekst.find('\n');
+	if (!pos){
+		line = tekst;
+		tekst.clear();
+		return line;
+	}
+	line = tekst.substr(0, pos + 1);
+	tekst = tekst.substr(pos + 1);
+	return line;
+}
 void	client::write(void){
-	send(this->_fd, this->buf_write.c_str(), this->buf_write.length(), 0);
-	this->buf_write.clear();
+	std::string line = get_line(this->buf_write);
+	send(this->_fd, line.c_str(), line.length(), 0);
+	// this->buf_write.clear();
 }
 
 // bool client::commands(){
