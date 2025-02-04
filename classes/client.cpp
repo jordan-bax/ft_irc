@@ -4,6 +4,8 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
+# define BUF_SIZE	4096
+
 client::client() {
 	std::cout << "new client [" << _fd << "]"<< std::endl;
 	

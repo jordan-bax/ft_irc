@@ -1,6 +1,9 @@
 #include <iostream>
 #include <filesystem>
-#include <chrono>
+// #include <chrono>
+#include <experimental/chrono>
+#include <experimental/source_location>
+#include <string_view>
 // #define fsize 1000
 // void bzero(char *s, size_t n){
 // 	for (size_t i = 0 ; n > i; i++)
@@ -26,18 +29,32 @@
 	
 // }
 
+void log(const std::string &message,
+		const std::experimental::source_location location =
+			std::experimental::source_location::current())
+{
+	std::clog << "file: "
+			<< location.file_name() << '('
+			<< location.line() << ':'
+			<< location.column() << ") `"
+			<< location.function_name() << "`: "
+			<< message << '\n';
+}
+
 int main(void)
 {
 	// Using time point and system_clock
 	std::chrono::time_point<std::chrono::system_clock> start, end;
 
 	start = std::chrono::system_clock::now();
-	end = std::chrono::system_clock::now();
 	time_t date;
 	// std::time(date);
+	
 	date = std::chrono::system_clock::to_time_t(start);
-	std::cout << ctime(&date);
+	log(ctime(&date));
+	std::cout << ctime(&date) << " " << __FILE__ << " d "<< __cplusplus << std::endl;
 
+	end = std::chrono::system_clock::now();
 	std::chrono::duration<double> elapsed_seconds = end - start;
 	std::time_t end_time = std::chrono::system_clock::to_time_t(end);
 

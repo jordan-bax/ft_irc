@@ -12,6 +12,7 @@
 #include "client.hpp"
 #include "channel.hpp"
 #include <chrono>
+#include "../other/error_log.hpp"
 
 env::env() {
 	time_t date = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
@@ -38,6 +39,7 @@ env & env::operator=( env const & rhs ) {
 	this->_select = rhs._select;// select returned 
 	this->_fd_read = rhs._fd_read;// a select set with the fd to read in
 	this->_fd_write = rhs._fd_write;
+	return *this;
 }
 bool	env::set_port(std::string port) {
 	try
@@ -93,7 +95,6 @@ bool env::set_env(std::string port, std::string password) {
 	if (!set_server())
 		return false;
 	this->_password = password;
-	// std::cout << "test\n";
 	return true;
 }
 bool env::set_server() {
@@ -105,14 +106,14 @@ bool env::set_server() {
 		struct sockaddr_in	sin;
 		struct protoent	*pe;
 		
-		pe = (struct protoent*)Xv(NULL, getprotobyname("tcp"), "getprotobyname");
-		s = X(-1, socket(PF_INET, SOCK_STREAM, pe->p_proto ), "socket");
-		X( -1, setsockopt(s ,SOL_SOCKET, SO_REUSEADDR, &opt, optlen), "sockopt");//| SO_REUSEADDR
+		pe = (struct protoent*)err_void(NULL, getprotobyname("tcp"), "getprotobyname");
+		s = err_int(-1, socket(PF_INET, SOCK_STREAM, pe->p_proto ), "socket");
+		err_int( -1, setsockopt(s ,SOL_SOCKET, SO_REUSEADDR, &opt, optlen), "sockopt");//| SO_REUSEADDR
 		sin.sin_family = AF_INET;
 		sin.sin_addr.s_addr = INADDR_ANY;
 		sin.sin_port = htons(this->_port);
-		X(-1, bind(s, (struct sockaddr*)&sin, sizeof(sin)), "bind");
-		X(-1, listen(s, 42), "listen");
+		err_int(-1, bind(s, (struct sockaddr*)&sin, sizeof(sin)), "bind");
+		err_int(-1, listen(s, 42), "listen");
 		this->connections.push_back(new term_reader(FD_IO, STDIN_FILENO));
 		this->connections.push_back(new server(FD_SERV, s));
 	}
@@ -179,7 +180,6 @@ void	env::check_fd()
 	{
 		if (this->connections[i] && FD_ISSET(this->connections[i]->get_fd(), &this->_fd_read))
 		{
-			std::cout << "test\n";
 			if (!this->connections[i]->read(*this))
 			{
 				delete this->connections[i];
@@ -199,12 +199,6 @@ void	env::check_fd()
 			this->connections.erase(this->connections.begin()+i);
 		max--;
 	}
-	// i = 0;
-	// std::find(start,end, 0);
-	// while (this->connections.size() < i)
-	// {
-
-	// }
 }
 
 std::vector<client*> env::get_clients() {

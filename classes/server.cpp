@@ -3,6 +3,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include "../preset/bircd.h"
+#include "../other/error_log.hpp"
 
 server::server() {
 	
@@ -28,14 +29,13 @@ bool	server::read(env &server_env) {
 	std::string		client_adderess;
 	uint16_t		client_port;
 
-	std::cout << "test1\n";
 	csin_len = sizeof(csin);
-	client_fd = X(-1, accept(this->_fd, (struct sockaddr*)&csin, &csin_len), "accept");
+	client_fd = err_int(-1, accept(this->_fd, (struct sockaddr*)&csin, &csin_len), "accept");
 	client_adderess = inet_ntoa(csin.sin_addr);
 	client_port =  ntohs(csin.sin_port);
 	std::cout << "New client #"<< client_fd <<" from " << client_adderess << ":"<< client_port << std::endl; 
 	server_env.get_connections().push_back(new client(FD_CLIENT, client_fd, client_adderess, client_port));
-	server_env.get_connections().back()->set_bufwrite(WELCOME);
+	server_env.get_connections().back()->set_bufwrite("WELCOME");
 	return true;
 }
 

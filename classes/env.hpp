@@ -1,7 +1,13 @@
 #pragma once
 #include <iostream>
 #include "../classes/channel.hpp"
-# include <vector>
+#include <vector>
+
+#define FD_FREE	0
+#define FD_IO	  1
+#define FD_SERV	1
+#define FD_CLIENT	2
+#define MAX(a,b)	((a > b) ? a : b)
 
 class connection;
 

@@ -3,7 +3,7 @@ VPATH= preset : classes : other : commands
 
 NAME= irc_server
 
-CLASSES+= connection client server term_reader env
+CLASSES+= connection client server term_reader env error_log
 
 
 
@@ -14,7 +14,7 @@ SRC+= main.cpp x.cpp \
 	# init_env.cpp clean_fd.cpp get_opt.cpp main_loop.cpp \
 	# init_fd.cpp do_select.cpp check_fd.cpp \
 	# srv_create.cpp srv_accept.cpp 
-SRC+= User_data.cpp signals.cpp srv_read.cpp
+SRC+= User_data.cpp signals.cpp 
 SRC+= $(CLASSES:%=%.cpp)
 
 OBF_DIR= OBF

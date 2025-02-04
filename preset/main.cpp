@@ -1,21 +1,7 @@
-
-// #include "bircd.h"
-// #include "unistd.h"
-
-// int	main(int ac, char **av)
-// {
-//   t_env	e;
-
-//   init_env(&e);// get limit
-//   get_opt(&e, ac, av); // check arg number and get port
-//   srv_create(&e, e.port); //make server
-//   main_loop(&e);// main loop
-
-//   return (0);
-// }
-
 #include "../classes/env.hpp"
 #include "../other/signal.hpp"
+#include "../other/error_log.hpp"
+#include "../classes/connection.hpp"
 
 int main(int argc, char const *argv[])
 {
@@ -28,6 +14,7 @@ int main(int argc, char const *argv[])
 	if(argc == 2 && !e.set_env(argv[1], "password"))
 		return 1;
 	init_signalHandling();
+	log("hoi");
 	std::cout << "server is now listening to port "<< e.get_port() << " pass "<< e.get_pass()
 		<<" and host "<< e.get_hostname() << "\nCreated on date " << e.get_date()<<  std::endl;
 	while (g_saveQuit)
