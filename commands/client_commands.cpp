@@ -75,6 +75,7 @@ void client::user(std::vector<std::string> input, env &server_env) {
 	_user->set_nickname(_tmp_nick);
 	_user->set_fullname(full_name);
 	_user->set_username(input[1]);
+	login_messages(server_env);
 }
 
 void	client::nick(std::vector<std::string> input, env &server_env) {
@@ -191,8 +192,8 @@ void	client::invite(std::vector<std::string> input, env &server_env) {
 	if (!client)
 		throw(client_exception(messages::Client::ERR_NOSUCHNICK, {input[1]}));
 	if (!channel) {
-		client->send_numeric_reply(messages::Client::RPL_INVITING, "", {get_nick(), client->get_nick(), input[2]});
-		send_numeric_reply(messages::Client::RPL_INVITING, "", {get_nick(), client->get_nick(), input[2]});
+		client->send_numeric_reply(server_env, messages::Client::RPL_INVITING, "", {get_nick(), client->get_nick(), input[2]});
+		send_numeric_reply(server_env, messages::Client::RPL_INVITING, "", {get_nick(), client->get_nick(), input[2]});
 		return ;
 	}
 	
@@ -203,8 +204,8 @@ void	client::invite(std::vector<std::string> input, env &server_env) {
 	if (channel->user_in_channel(client->get_nick()))
 		throw(client_exception(messages::Client::ERR_USERONCHANNEL, {client->get_nick(), channel->get_name()}));
 	channel->add_invite(input[1]);
-	client->send_numeric_reply(messages::Client::RPL_INVITING, "", {get_nick(), client->get_nick(), channel->get_name()});
-	send_numeric_reply(messages::Client::RPL_INVITING, "", {get_nick(), client->get_nick(), channel->get_name()});
+	client->send_numeric_reply(server_env, messages::Client::RPL_INVITING, "", {get_nick(), client->get_nick(), channel->get_name()});
+	send_numeric_reply(server_env, messages::Client::RPL_INVITING, "", {get_nick(), client->get_nick(), channel->get_name()});
 }
 
 void	handle_i(std::vector<std::string> input, channel *chan) {

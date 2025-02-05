@@ -1,3 +1,4 @@
 PASS password
 NICK joo
 USER jor 0 * : job
+PRIVMSG joo :Hello

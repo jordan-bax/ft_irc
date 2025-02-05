@@ -12,3 +12,11 @@ Check connection with nc -C. IOT instruction (core dumped)
 make write loop
 host in client
 password fariable 
+
+
+Message protocol:
+Privmsg to user: <sender host> PRIVMSG <username receiver> :<message>
+Privmsg to channel: <sender host> PRIVMSG <channel name> :<message>
+Numeric reply: <server host> <numeric code> <username> <params> :<message>
+
+Help messages needs to be numeric reply2

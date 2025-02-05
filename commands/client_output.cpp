@@ -65,23 +65,23 @@ std::string	client::reply_message(client_exception const &e) {
 	return (build_reply_message(numeric_reply, msg, params));
 }
 
-void	client::send_numeric_reply(client_exception const &e) {
+void	client::send_numeric_reply(env &env, client_exception const &e) {
 	messages::Client	numeric_reply = e.get_numeric_reply();
 	std::string			msg = reply_message(e);
-	std::string			nick_name = _user == NULL ? "<not registered>" : _user->get_nickname();
+	std::string			nick_name = _user == NULL ? "*" : _user->get_nickname();
 	std::stringstream	ss;
 
-	ss << ":" << "127.0.0.1@localhost" << " " << numeric_reply << " " << nick_name << " " << msg << "\r\n";
+	ss << ":" << env.get_hostname() << " " << numeric_reply << " " << nick_name << " " << msg << "\r\n";
 	buf_write = ss.str();
 }
 
-void	client::send_numeric_reply(messages::Client code, std::string const &msg, std::vector<std::string> params) {
+void	client::send_numeric_reply(env &env, messages::Client code, std::string const &msg, std::vector<std::string> params) {
 	std::string			full_msg = build_reply_message(code, msg, params);
-	std::string			nick_name = _user == NULL ? "<not registered>" : _user->get_nickname();
+	std::string			nick_name = _user == NULL ? "*" : _user->get_nickname();
 	std::stringstream	ss;
 
-	ss << ":" << "127.0.0.1@localhost" << " " << code << " " << full_msg << "\r\n";
-	buf_write = ss.str();
+	ss << ":" << env.get_hostname() << " " << code << " " << nick_name << " " << full_msg << "\r\n";
+	buf_write += ss.str();
 }
 
 void	client::receive_message(std::string const &sender, std::string const &msg) {
@@ -112,4 +112,14 @@ void	client::client_message(std::string const &msg) {
 		buf_write += line_stream.str();
 		write();
 	}
+}
+
+void	client::login_messages(env &env) {
+	const std::string	server_name = "IRC";
+	const std::string	server_version = "v1.0";
+
+	send_numeric_reply(env, messages::Client::RPL_WELCOME, get_client_message(messages::Client::RPL_WELCOME));
+	send_numeric_reply(env, messages::Client::RPL_YOURHOST, ":Your host is " + server_name + ", running version " + server_version);
+	send_numeric_reply(env, messages::Client::RPL_CREATED, ":This server was created " + env.get_date());
+	send_numeric_reply(env, messages::Client::RPL_MYINFO, ":" + server_name + " " + server_version + " 0" + " 0");
 }

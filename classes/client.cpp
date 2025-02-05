@@ -94,7 +94,7 @@ bool	client::read(env &server_env){
 		std::cout << e.what();
 	}
 	catch(const client_exception& e) {
-		send_numeric_reply(e);
+		send_numeric_reply(server_env, e);
 	}
 	
 	return true;
