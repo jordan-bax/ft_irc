@@ -303,3 +303,30 @@ void	client::mode(std::vector<std::string> input, env &server_env) {
 		throw(client_exception(messages::Client::ERR_UNKNOWNMODE, {input[2], target_channel->get_name()}));
 	it->second(input, target_channel);
 }
+
+void	client::list(std::vector<std::string> input, env &server_env) {
+	if (!_user)
+		throw(client_exception(messages::Client::ERR_NOTREGISTERED));
+		
+	if (input.size() < 2) {
+		std::vector<channel*> channels = server_env.get_channels();
+		for (channel *chan : channels) {
+			std::string	msg = chan->get_name() + " " + std::to_string(chan->get_user_count()) + " :" + chan->get_topic();
+			send_numeric_reply(server_env, messages::Client::RPL_LIST, msg);
+		}
+		send_numeric_reply(server_env, client_exception(messages::Client::RPL_LISTEND));
+		return ;
+	}
+
+	std::vector<std::string> channels = split(input[1], ',');
+	for (std::string chan_name : channels) {
+		if (!server_env.channel_exists(chan_name)) {
+			send_numeric_reply(server_env, client_exception(messages::Client::ERR_NOSUCHCHANNEL, {chan_name}));
+			continue ;
+		}
+		channel *chan = server_env.search_channel(chan_name);
+		std::string msg = chan->get_name() + " " + std::to_string(chan->get_user_count()) + " :" + chan->get_topic();
+		send_numeric_reply(server_env, messages::Client::RPL_LIST, msg);
+	}
+	send_numeric_reply(server_env, client_exception(messages::Client::RPL_LISTEND));
+}

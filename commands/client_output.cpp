@@ -72,7 +72,7 @@ void	client::send_numeric_reply(env &env, client_exception const &e) {
 	std::stringstream	ss;
 
 	ss << ":" << env.get_hostname() << " " << numeric_reply << " " << nick_name << " " << msg << "\r\n";
-	buf_write = ss.str();
+	buf_write += ss.str();
 }
 
 void	client::send_numeric_reply(env &env, messages::Client code, std::string const &msg, std::vector<std::string> params) {
@@ -94,8 +94,7 @@ void	client::receive_message(std::string const &sender, std::string const &msg) 
 	{
 		line_stream.str("");
 		line_stream << ":" << sender << " PRIVMSG " << get_nick() << " :" << line << "\r\n";
-		buf_write = line_stream.str();
-		write();
+		buf_write += line_stream.str();
 	}
 }
 
@@ -109,8 +108,7 @@ void		client::recieve_channel_message(std::string const &sender, std::string con
 	{
 		line_stream.str("");
 		line_stream << ":" << sender << " PRIVMSG " << channel << " :" << line << "\r\n";
-		buf_write = line_stream.str();
-		write();
+		buf_write += line_stream.str();
 	}
 }
 

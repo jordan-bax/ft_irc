@@ -32,7 +32,8 @@ const std::unordered_map<std::string, client::FunctionPtr> client::functionMap =
 	{"KICK", &client::kick},
 	{"INVITE", &client::invite},
 	{"TOPIC", &client::topic},
-	{"MODE", &client::mode}
+	{"MODE", &client::mode},
+	{"LIST", &client::list}
 };
 
 static std::unordered_map<std::string, client::FunctionPtr>::const_iterator verify_input(std::vector<std::string> const &input) {

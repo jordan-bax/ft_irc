@@ -35,6 +35,7 @@ private:
 	void	invite(std::vector<std::string> input, env &server_env);
 	void	topic(std::vector<std::string> input, env &server_env);
 	void	mode(std::vector<std::string> input, env &server_env);
+	void	list(std::vector<std::string> input, env &server_env);
 
 	void	send_usrmsg(std::string const &target, std::string const &msg, env &server_env);
 	void	send_chanmsg(std::string const &target, std::string const &msg, env &server_env);

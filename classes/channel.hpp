@@ -63,6 +63,7 @@ public:
 	std::string	const	&get_topic() const { return (_topic_msg); }
 	bool const			get_topic_permission() const { return (_topic_permision); }
 	bool const			&get_invonly() const { return (_invite_only); }
+	unsigned int		get_user_count() const { return (_clients.size()); }
 
 	void	send_message(std::string const &sender, std::string const &msg);
 

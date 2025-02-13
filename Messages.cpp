@@ -12,6 +12,7 @@ std::string	get_client_message(messages::Client numeric_reply) {
 		{messages::Client::RPL_CREATED, ":This server was created <date>"},
 		{messages::Client::RPL_MYINFO, ":<servername> <version> <available user modes> <available channel modes>"},
 		{messages::Client::RPL_AWAY, " :User is currently offline"},
+		{messages::Client::RPL_LISTEND, ":End of LIST"},
 		{messages::Client::RPL_NOTOPIC, " :No topic is set"},
 		{messages::Client::RPL_TOPIC, " :"},
 		{messages::Client::RPL_INVITING, " :"},
