@@ -7,18 +7,18 @@
 namespace messages {
 	namespace client_message {
 		constexpr const char *HELP_MESSAGE = 
-    		"\nWelcome to the IRC server! Available commands are:\n"
-    		"HELP          : Displays this help message.\n"
-    		"PRIVMSG <msgtarget> :<message> : Sends a private message to a user.\n"
-    		"JOIN <channel> : Joins the specified channel.\n"
-    		"USER <user> <unused> <unused> <realname> : Sets the username for the client.\n"
-    		"NICK <nickname> : Sets the nickname for the client.\n"
-    		"PASS <password> : Provides the password for authentication.\n"
-    		"KICK <channel> <user> : Kicks a user from a channel.\n"
-    		"INVITE <user> <channel> : Invites a user to a channel.\n"
-    		"TOPIC <channel> [<topic>] : Views or changes the topic of a channel.\n"
-    		"MODE <channel> <mode> : Changes the mode of a channel or user.\n"
-    		"For more detailed information, please refer to the server documentation.\n\n";
+    		"Welcome to the IRC server! Available commands are:\n"
+    		"HELP	:Displays this help message.\n"
+    		"PRIVMSG <msgtarget> :<message>		:Sends a private message to a user.\n"
+    		"JOIN <channel>		:Joins the specified channel.\n"
+    		"USER <user> <unused> <unused> <realname>		:Sets the username for the client.\n"
+    		"NICK <nickname>		:Sets the nickname for the client.\n"
+    		"PASS <password>		:Provides the password for authentication.\n"
+    		"KICK <channel> <user>		:Kicks a user from a channel.\n"
+    		"INVITE <user> <channel>		:Invites a user to a channel.\n"
+    		"TOPIC <channel> [<topic>]		:Views or changes the topic of a channel.\n"
+    		"MODE <channel> <mode>		:Changes the mode of a channel or user.\n"
+    		"For more detailed information, please refer to the server documentation.\n";
 
 		constexpr const char *INPUT_USAGE = "Usage: <command> [<paramaters>]\n";
 		
@@ -76,7 +76,9 @@ namespace messages {
 		ERR_USERONCHANNEL = 443,		// returned when trying to invite user already in channel
 
 		ERR_UNKNOWNMODE = 472,			// returned when user entered unknown mode
-		ERR_UMODEUNKNOWNFLAG = 501		// returned when user entered wrong mode flag
+		ERR_UMODEUNKNOWNFLAG = 501,		// returned when user entered wrong mode flag
+
+		RPL_HELP = 705
 	};
 
 	namespace server {

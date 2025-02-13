@@ -99,7 +99,7 @@ void	client::receive_message(std::string const &sender, std::string const &msg) 
 	}
 }
 
-void	client::client_message(std::string const &msg) {
+void		client::recieve_channel_message(std::string const &sender, std::string const &channel, std::string const &msg) {
 	std::stringstream	msg_stream;
 	std::stringstream	line_stream;
 	std::string			line;
@@ -108,9 +108,20 @@ void	client::client_message(std::string const &msg) {
 	while (std::getline(msg_stream, line))
 	{
 		line_stream.str("");
-		line_stream << ":" << "server" << " PRIVMSG " << "you" << " :" << line << "\r\n";
-		buf_write += line_stream.str();
+		line_stream << ":" << sender << " PRIVMSG " << channel << " :" << line << "\r\n";
+		buf_write = line_stream.str();
 		write();
+	}
+}
+
+void	client::help_message(env &env) {
+	std::stringstream	msg_stream;
+	std::string			line;
+
+	msg_stream << messages::client_message::HELP_MESSAGE;
+	while (std::getline(msg_stream, line)) {
+		line.insert(0, ":");
+		send_numeric_reply(env, messages::Client::RPL_HELP, line);
 	}
 }
 

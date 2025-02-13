@@ -13,9 +13,8 @@
 
 // TODO: check if client allows custom numeric codes
 
-void	client::help(std::vector<std::string> input, env &server_env)
-{
-	client_message(messages::client_message::HELP_MESSAGE);
+void	client::help(std::vector<std::string> input, env &server_env) {
+	help_message(server_env);
 }
 
 void	client::send_usrmsg(std::string const &target, std::string const &msg, env &server_env) {
@@ -36,8 +35,7 @@ void	client::send_chanmsg(std::string const &target, std::string const &msg, env
 	target_channel->send_message(get_nick(), msg);
 }
 
-void	client::privmsg(std::vector<std::string> input, env &server_env)
-{
+void	client::privmsg(std::vector<std::string> input, env &server_env) {
 	if (_user == NULL)
 		throw(client_exception(messages::Client::ERR_NOTREGISTERED));
 	if (input.size() < 2 )

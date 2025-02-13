@@ -35,7 +35,7 @@ bool	server::read(env &server_env) {
 	client_port =  ntohs(csin.sin_port);
 	std::cout << "New client #"<< client_fd <<" from " << client_adderess << ":"<< client_port << std::endl; 
 	server_env.get_connections().push_back(new client(FD_CLIENT, client_fd, client_adderess, client_port));
-	server_env.get_connections().back()->set_bufwrite("WELCOME");
+	//server_env.get_connections().back()->set_bufwrite("WELCOME");
 	return true;
 }
 

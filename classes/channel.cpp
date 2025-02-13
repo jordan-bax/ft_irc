@@ -94,7 +94,7 @@ bool const	channel::is_full() const {
 void	channel::send_message(std::string const &sender, std::string const &msg) {
 	for (auto *client: _clients) {
 		if (client->get_nick() != sender)
-			client->receive_message(_name, msg);
+			client->recieve_channel_message(sender, _name, msg);
 	}
 }
 
@@ -104,6 +104,6 @@ bool	channel::valid_name(std::string name) {
 	if (std::string("#&+!").find(name[0]) == std::string::npos)
 		return (false);
 	return std::all_of(name.begin() + 1, name.end(), [](char c) {
-		return std::isalnum(c) || c == '-' || c == '_' || c == '.';
+		return (std::isalnum(c) || c == '-' || c == '_' || c == '.');
 	});
 }

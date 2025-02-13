@@ -57,7 +57,8 @@ public:
 	void		send_numeric_reply(env &env, client_exception const &e);
 	void		send_numeric_reply(env &env, messages::Client code, std::string const &msg, std::vector<std::string> params = {});
 	void		receive_message(std::string const &sender, std::string const &msg);
-	void		client_message(std::string const &msg);
+	void		recieve_channel_message(std::string const &sender, std::string const &channel, std::string const &msg);
+	void		help_message(env &env);
 	void		login_messages(env &env);
 
 	std::string	const &get_nick() const {return (_user->get_nickname());}
