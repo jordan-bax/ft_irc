@@ -44,12 +44,11 @@ void	client::privmsg(std::vector<std::string> input, env &server_env) {
 		throw(client_exception(messages::Client::ERR_NORECIPIENT, {input[0]}));
 	else if (input.size() < 3)
 		throw(client_exception(messages::Client::ERR_NOTEXTTOSEND));
-	if (input[2][0] != ':')
-		throw(client_exception(messages::Client::ERR_NOTEXTTOSEND));
 
 	std::string target = input[1];
 	std::string msg = input[2];
-	msg.erase(msg.begin(), msg.begin() + 1);
+	if (msg[0] == ':')
+		msg.erase(msg.begin(), msg.begin() + 1);
 	if (std::string("#&+!").find(input[1][0]) != std::string::npos)
 		send_chanmsg(target, msg, server_env);
 	else
@@ -120,7 +119,6 @@ void	client::join(std::vector<std::string> input, env &server_env) {
 	}
 }
 
-// TODO: check error for more channel than 1 but not the same users
 // TODO: kick messages when user is kicked from channel
 void	client::kick(std::vector<std::string> input, env &server_env) {
 	if (_user == NULL)
@@ -131,7 +129,7 @@ void	client::kick(std::vector<std::string> input, env &server_env) {
 	std::vector<std::string> channels = split(input[1], ',');
 	std::vector<std::string> users = split(input[2], ',');
 	if (channels.size() > 1 && channels.size() != users.size())
-		throw(client_exception(messages::Client::ERR_NEEDMOREPARAMS, {input[0]}));
+		throw(client_exception(messages::Client::ERR_CHANNOTUSERSIZE, {input[0]}));
 
 	for (size_t i = 0; i < users.size(); i++) {
 		std::string chan_name = channels.size() > 1 ? channels[i] : channels[0];
@@ -240,10 +238,9 @@ void	handle_o(std::vector<std::string> input, channel *chan) {
 	if (!chan->user_in_channel(input[3]))
 		throw(client_exception(messages::Client::ERR_USERNOTINCHANNEL, {input[3], chan->get_name()}));
 
-	// Placeholder numeric code
 	if (input[2][0] == '-') {
 		if (!chan->user_is_operator(input[3]))
-			throw(client_exception(messages::Client::ERR_CHANOPRIVSNEEDED, {chan->get_name()}));
+			return ;
 		chan->remove_operator(input[3]);
 		return ;
 	}
@@ -260,10 +257,8 @@ void	handle_l(std::vector<std::string> input, channel *chan) {
 
 	unsigned long new_value = 0;
     for (char c : input[3]) {
-		if (!std::isdigit(c)) {
-			// Placeholder numeric code
-			throw(client_exception(messages::Client::ERR_NEEDMOREPARAMS, {input[2]}));
-		}
+		if (!std::isdigit(c))
+			throw(client_exception(messages::Client::ERR_INVALIDLIMIT, {input[2]}));
         new_value = new_value * 10 + (c - '0');
     }
 	if (new_value > std::numeric_limits<unsigned int>::max()) {

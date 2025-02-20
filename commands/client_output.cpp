@@ -25,6 +25,8 @@ std::string	client::build_reply_message(messages::Client code, std::string const
 		case messages::Client::ERR_TOOMANYCHANNELS:
 		case messages::Client::ERR_CHANOPRIVSNEEDED:
 		case messages::Client::ERR_NOTONCHANNEL:
+		case messages::Client::ERR_CHANNOTUSERSIZE:
+		case messages::Client::ERR_INVALIDLIMIT:
 			if (params.size() < 1)
 				throw(server_exception("Error: missing parameter"));
 			return (params[0] + msg);

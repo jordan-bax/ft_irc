@@ -81,7 +81,10 @@ namespace messages {
 		ERR_UNKNOWNMODE = 472,			// returned when user entered unknown mode
 		ERR_UMODEUNKNOWNFLAG = 501,		// returned when user entered wrong mode flag
 
-		RPL_HELP = 705
+		// Custom codes
+		RPL_HELP = 705,
+		ERR_CHANNOTUSERSIZE = 706,		// returned when user doesn't give the correct amount of channels and users on kick
+		ERR_INVALIDLIMIT = 707			// returned when entered limit contains other characters than numeric
 	};
 
 	namespace server {
