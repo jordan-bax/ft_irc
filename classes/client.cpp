@@ -45,6 +45,7 @@ static std::string	get_line(std::string &tekst) {
 void	client::write(void){
 	std::string line = get_line(this->buf_write);
 	send(this->_fd, line.c_str(), line.length(), 0);
+	std::cout<< "bob\n";
 	// this->buf_write.clear();
 }
 
@@ -83,7 +84,7 @@ bool	client::read(env &server_env){
 			if (pp.back()== '\r')
 				pp.pop_back();
 			this->buf_read = pp + '\n';
-			std::cout << this->buf_read << ss.size()<< std::endl;
+			// std::cout << this->buf_read << ss.size()<< std::endl;
 			// print_ascii(this->buf_read);
 			// print_ascii(pp);
 			// print_ascii(ss[0]);

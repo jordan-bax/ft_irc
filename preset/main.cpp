@@ -24,5 +24,6 @@ int main(int argc, char const *argv[])
 		e.check_fd();
 	}
 	connection::clear(e.get_connections());
+	channel::clear(e.get_channels());
 	return 0;
 }

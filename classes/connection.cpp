@@ -9,7 +9,8 @@ connection::connection( int type, int fd ): _fd(fd),_type(type) {
 
 }
 connection::~connection() {
-	close(_fd);
+	if (_fd > 2)
+		close(_fd);
 	std::cout << "delete connection [" << _fd << "]\n";
 
 }

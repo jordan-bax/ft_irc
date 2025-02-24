@@ -3,17 +3,17 @@ VPATH= preset : classes : other : commands
 
 NAME= irc_server
 
-CLASSES+= connection client server term_reader env error_log
+CLASSES+= connection client server term_reader env error_log rock_bot
 
 
 
-SRC= client_read.cpp client_write.cpp client_input.cpp client_output.cpp client_commands.cpp \
+SRC= client_input.cpp client_output.cpp client_commands.cpp \
 	Messages.cpp temporary.cpp channel.cpp
 
-SRC+= main.cpp x.cpp \
+SRC+= main.cpp #x.cpp \
 	# init_env.cpp clean_fd.cpp get_opt.cpp main_loop.cpp \
 	# init_fd.cpp do_select.cpp check_fd.cpp \
-	# srv_create.cpp srv_accept.cpp 
+	# srv_create.cpp srv_accept.cpp client_read.cpp client_write.cpp 
 SRC+= User_data.cpp signals.cpp 
 SRC+= $(CLASSES:%=%.cpp)
 

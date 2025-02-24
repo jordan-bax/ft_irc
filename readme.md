@@ -9,10 +9,8 @@ Fill in the emtpy <> params in messages
 Make sure client is removed from channel when disconnecting
 
 Check connection with nc -C. IOT instruction (core dumped)
-make write loop
-host in client
-password fariable 
 
+LIST implementatie 
 
 Message protocol:
 Privmsg to user: <sender host> PRIVMSG <username receiver> :<message>
@@ -20,3 +18,10 @@ Privmsg to channel: <sender host> PRIVMSG <channel name> :<message>
 Numeric reply: <server host> <numeric code> <username> <params> :<message>
 
 Help messages needs to be numeric reply
+185-61-55-74
+:jor!~joo@185-61-55-73.185-61-55-ip.fmo-solutions.nl PRIVMSG jor : tesr
+
+:OthNC!~OthelloNC@185-61-55-73.185-61-55-ip.fmo-solutions.nl PRIVMSG #ncTestChannel ://throw rock
+:OthNC!~OthelloNC@185-61-55-73.185-61-55-ip.fmo-solutions.nl PART #ncTestChannel
+
+:OthNC PRIVMSG OthNC :Hello me

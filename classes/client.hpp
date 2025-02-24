@@ -12,6 +12,7 @@
 class client : public connection
 {
 private:
+protected:
 	bool					_authorised = false;
 	std::string				_tmp_nick;
 	std::string				_address;//  Internet address. 
@@ -44,14 +45,14 @@ public:
 	client( int type , int fd );
 	client( int type , int fd , std::string addr, uint16_t port);
 	// client( client const & src );
-	~client();
+	virtual ~client();
 
 	using FunctionPtr = void (client::*)(std::vector<std::string>, env&);
 	static const std::unordered_map<std::string, FunctionPtr> functionMap;
 
 	// client & operator=( client const & rhs );
-	void	write(void);
-	bool	read(env &server_env);
+	virtual void	write(void);
+	virtual bool	read(env &server_env);
 
 	std::string	build_reply_message(messages::Client code, std::string const &msg, std::vector<std::string> params);
 	std::string	reply_message(client_exception const &e);

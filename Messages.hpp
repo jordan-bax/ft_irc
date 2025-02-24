@@ -84,7 +84,8 @@ namespace messages {
 		// Custom codes
 		RPL_HELP = 705,
 		ERR_CHANNOTUSERSIZE = 706,		// returned when user doesn't give the correct amount of channels and users on kick
-		ERR_INVALIDLIMIT = 707			// returned when entered limit contains other characters than numeric
+		ERR_INVALIDLIMIT = 707,			// returned when entered limit contains other characters than numeric
+		RPL_TEST = 901
 	};
 
 	namespace server {

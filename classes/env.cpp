@@ -13,6 +13,7 @@
 #include "channel.hpp"
 #include <chrono>
 #include "../other/error_log.hpp"
+#include "rock_bot.hpp"
 
 env::env() {
 	time_t date = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
@@ -119,6 +120,7 @@ bool env::set_server() {
 		err_int(-1, listen(s, 42), "listen");
 		this->connections.push_back(new term_reader(FD_IO, STDIN_FILENO));
 		this->connections.push_back(new server(FD_SERV, s));
+		this->connections.push_back(new rock_bot(*this));
 	}
 	catch(const std::exception& e)
 	{
@@ -171,7 +173,10 @@ void	env::init_fd()
 	}
 }
 void	env::do_select(){
-	this->_select = select(this->_max + 1, &this->_fd_read, &this->_fd_write, NULL, NULL);
+	struct timeval wait;
+	wait.tv_sec=0;
+	wait.tv_usec=0;
+	this->_select = select(this->_max + 1, &this->_fd_read, &this->_fd_write, NULL, &wait);
 }
 void	env::check_fd()
 {
@@ -180,6 +185,7 @@ void	env::check_fd()
 	int i = 0;
 	int max = this->connections.size() - 1;
 	while (this->connections.size() > i && (this->_select > 0))
+	// while (this->connections.size() > i )
 	{
 		if (this->connections[i] && FD_ISSET(this->connections[i]->get_fd(), &this->_fd_read))
 		{

@@ -5,6 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include <iterator>
+#include "../other/error_log.hpp"
 
 std::vector<std::string>	client::split(std::string const &str, char delimiter) {
 	std::vector<std::string>	result;
