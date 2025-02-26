@@ -22,7 +22,10 @@ void	client::send_usrmsg(std::string const &target, std::string const &msg, env 
 
 	if (!(target_client = server_env.search_client_nick( target)))
 		throw(client_exception(messages::Client::ERR_NOSUCHNICK, {target}));
-	target_client->receive_message(get_nick(), msg);
+	std::stringstream	sender;
+
+	sender << get_nick() << "!~" << get_usrname() << "@" << server_env.get_hostname();
+	target_client->receive_message(sender.str(), msg);
 }
 
 void	client::send_chanmsg(std::string const &target, std::string const &msg, env &server_env) {
@@ -32,7 +35,10 @@ void	client::send_chanmsg(std::string const &target, std::string const &msg, env
 		throw(client_exception(messages::Client::ERR_NOSUCHCHANNEL, {target}));
 	if (!target_channel->user_in_channel(get_nick()))
 		throw(client_exception(messages::Client::ERR_NOTONCHANNEL, {target}));
-	target_channel->send_message(get_nick(), msg);
+	std::stringstream	sender;
+
+	sender << get_nick() << "!~" << get_usrname() << "@" << server_env.get_hostname();
+	target_channel->send_message(sender.str(), get_nick(), msg);
 }
 
 void	client::privmsg(std::vector<std::string> input, env &server_env) {

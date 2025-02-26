@@ -91,9 +91,9 @@ bool const	channel::is_full() const {
 	return (false);
 }
 
-void	channel::send_message(std::string const &sender, std::string const &msg) {
+void	channel::send_message(std::string const &sender, std::string const &sender_nick, std::string const &msg) {
 	for (auto *client: _clients) {
-		if (client->get_nick() != sender)
+		if (client->get_nick() != sender_nick)
 			client->recieve_channel_message(sender, _name, msg);
 	}
 }

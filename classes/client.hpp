@@ -64,6 +64,7 @@ public:
 	void		login_messages(env &env);
 
 	std::string	const &get_nick() const {return (_user->get_nickname());}
+	std::string const &get_usrname() const {return (_user->get_username());}
 	bool	is_registered() const { return (_user != NULL); }
 
 	static std::vector<std::string>	split(std::string const &str, char delimiter);

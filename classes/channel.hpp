@@ -65,7 +65,7 @@ public:
 	bool const			&get_invonly() const { return (_invite_only); }
 	unsigned int		get_user_count() const { return (_clients.size()); }
 
-	void	send_message(std::string const &sender, std::string const &msg);
+	void	send_message(std::string const &sender, std::string const &sender_nick, std::string const &msg);
 
 	static bool	valid_name(std::string name);
 
