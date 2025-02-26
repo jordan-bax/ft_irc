@@ -45,7 +45,6 @@ static std::string	get_line(std::string &tekst) {
 void	client::write(void){
 	std::string line = get_line(this->buf_write);
 	send(this->_fd, line.c_str(), line.length(), 0);
-	std::cout<< "bob\n";
 	// this->buf_write.clear();
 }
 
@@ -60,7 +59,7 @@ void	client::write(void){
 // 	}
 // 	return true;
 // }
-void print_ascii(std::string s){for (int i: s){std::cout << i << " " << static_cast<char>(i) << " ";}std::cout <<'\n';}
+static void print_ascii(std::string s){for (int i: s){std::cout << i << " " << static_cast<char>(i) << " ";}std::cout <<'\n';}
 
 bool	client::read(env &server_env){
 	int		i;

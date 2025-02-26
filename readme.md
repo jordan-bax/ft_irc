@@ -25,3 +25,5 @@ Help messages needs to be numeric reply
 :OthNC!~OthelloNC@185-61-55-73.185-61-55-ip.fmo-solutions.nl PART #ncTestChannel
 
 :OthNC PRIVMSG OthNC :Hello me
+:Angel!wings@irc.org INVITE Wiz #Dust // exemple join
+:f1r4s12.codam.nl 341 rockbot OthNC rockbot #ncTestChannel// join

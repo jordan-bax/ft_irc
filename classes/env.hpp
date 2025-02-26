@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include "../classes/channel.hpp"
+#include "../other/error_log.hpp"
 #include <vector>
 
 #define FD_FREE	0
