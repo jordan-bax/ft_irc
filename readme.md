@@ -27,3 +27,7 @@ Help messages needs to be numeric reply
 :OthNC PRIVMSG OthNC :Hello me
 :Angel!wings@irc.org INVITE Wiz #Dust // exemple join
 :f1r4s12.codam.nl 341 rockbot OthNC rockbot #ncTestChannel// join
+
+
+direct tekst :<server hostname> <numRPL> <cmd> :<error-tekst>
+normal tekst :<nick>!~<name>@<client hostname / ip> <command> :<tekst>

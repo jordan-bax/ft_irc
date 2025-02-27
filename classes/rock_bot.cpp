@@ -105,6 +105,8 @@ static std::string who_wins(int player , int bot){
 }
 void	rock_bot::write(void){
 	std::string buf= get_line(buf_write,'\n');
+	log(buf);
+	// if (buf.find("INVITE") == std::string::npos)
 	if (buf.find("PRIVMSG") == std::string::npos)
 	{
 		buf.clear();

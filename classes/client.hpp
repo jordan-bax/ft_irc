@@ -56,6 +56,7 @@ public:
 
 	std::string	build_reply_message(messages::Client code, std::string const &msg, std::vector<std::string> params);
 	std::string	reply_message(client_exception const &e);
+	void		send_outgoing_message(env &env, messages::Client code, std::string const &msg, std::vector<std::string> params, std::string cmd);
 	void		send_numeric_reply(env &env, client_exception const &e);
 	void		send_numeric_reply(env &env, messages::Client code, std::string const &msg, std::vector<std::string> params = {});
 	void		receive_message(std::string const &sender, std::string const &msg);

@@ -6,7 +6,7 @@
 #    By: jbax <jbax@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/19 20:25:57 by ohengelm          #+#    #+#              #
-#    Updated: 2025/02/25 18:23:25 by jbax             ###   ########.fr        #
+#    Updated: 2025/02/27 17:29:35 by jbax             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,13 +32,13 @@ CHANNEL="#ncTestChannel"
 	echo "USER $USER1 * $IRC_SERVER :$USER2";
 	sleep 0.1;
 # Hardcoded tests
-	# echo "PRIVMSG $NICK :Hello me"
-	# echo "JOIN $CHANNEL"
-	# echo "INVITE rockbot $CHANNEL"
-	# echo "PRIVMSG $CHANNEL :rock"
-	# sleep 0.1
-	# echo "KICK $CHANNEL rockbot :I'm crazy with power!"
-	# sleep 0.1
+	echo "PRIVMSG $NICK :Hello me"
+	echo "JOIN $CHANNEL"
+	echo "INVITE rockbot $CHANNEL"
+	echo "PRIVMSG $CHANNEL :rock"
+	sleep 0.1
+	echo "KICK $CHANNEL rockbot :I'm crazy with power!"
+	sleep 0.1
 	# echo "MODE $CHANNEL"
 	# echo "MODE $CHANNEL +l 1"
 	# echo "MODE $CHANNEL +i"

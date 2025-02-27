@@ -86,6 +86,18 @@ void	client::send_numeric_reply(env &env, messages::Client code, std::string con
 	buf_write += ss.str();
 }
 
+void	client::send_outgoing_message(env &env, messages::Client code, std::string const &msg, std::vector<std::string> params, std::string cmd) {
+	std::string			full_msg = build_reply_message(code, msg, params);
+	std::string			nick_name = _user == NULL ? "*" : _user->get_nickname();
+	std::string			name = _user == NULL ? "*" : _user->get_username();
+	std::stringstream	ss;
+
+	for (auto aa:params )
+		std::cout << aa << std::endl;
+	ss << ":" << nick_name << "!" << name << "@" << _address << " " << cmd << " " << full_msg << "\r\n";
+	buf_write += ss.str();
+}
+
 void	client::receive_message(std::string const &sender, std::string const &msg) {
 	std::stringstream	msg_stream;
 	std::stringstream	line_stream;
