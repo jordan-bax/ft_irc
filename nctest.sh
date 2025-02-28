@@ -6,7 +6,7 @@
 #    By: jbax <jbax@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/19 20:25:57 by ohengelm          #+#    #+#              #
-#    Updated: 2025/02/27 17:29:35 by jbax             ###   ########.fr        #
+#    Updated: 2025/02/28 17:36:43 by jbax             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,9 +19,9 @@ else
 fi
 PORT=8000
 PASSWORD="password"
-USER1="OthelloNC"
-USER2="OtheNetCat"
-NICK="OthNC"
+USER1="user$1"
+USER2="full$1"
+NICK="nick$1"
 CHANNEL="#ncTestChannel"
 {
 	sleep 0.1
