@@ -206,8 +206,9 @@ void	client::invite(std::vector<std::string> input, env &server_env) {
 	if (channel->user_in_channel(client->get_nick()))
 		throw(client_exception(messages::Client::ERR_USERONCHANNEL, {client->get_nick(), channel->get_name()}));
 	channel->add_invite(input[1]);
-	client->send_numeric_reply(server_env, messages::Client::RPL_INVITING, "", {get_nick(), client->get_nick(), channel->get_name()});
 	send_numeric_reply(server_env, messages::Client::RPL_INVITING, "", {get_nick(), client->get_nick(), channel->get_name()});
+	// client->send_numeric_reply(server_env, messages::Client::RPL_INVITING, "", {get_nick(), client->get_nick(), channel->get_name()});
+	client->send_outgoing_message(server_env, messages::Client::RPL_INVITING, "", {get_nick(), client->get_nick(), channel->get_name()}, "INVITE");
 }
 
 void	handle_i(std::vector<std::string> input, channel *chan) {

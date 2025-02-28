@@ -1,12 +1,12 @@
 # **************************************************************************** #
 #                                                                              #
-#                                                         ::::::::             #
-#    nctest.sh                                          :+:    :+:             #
-#                                                      +:+                     #
-#    By: ohengelm <ohengelm@student.42.fr>            +#+                      #
-#                                                    +#+                       #
-#    Created: 2023/10/19 20:25:57 by ohengelm      #+#    #+#                  #
-#    Updated: 2023/10/19 20:25:59 by ohengelm      ########   odam.nl          #
+#                                                         :::      ::::::::    #
+#    nctest.sh                                          :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: jbax <jbax@student.42.fr>                  +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2023/10/19 20:25:57 by ohengelm          #+#    #+#              #
+#    Updated: 2025/02/27 17:29:35 by jbax             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,22 +34,27 @@ CHANNEL="#ncTestChannel"
 # Hardcoded tests
 	echo "PRIVMSG $NICK :Hello me"
 	echo "JOIN $CHANNEL"
-	echo "INVITE RockBot $CHANNEL"
-	echo "PRIVMSG $CHANNEL ://throw rock"
+	echo "INVITE rockbot $CHANNEL"
+	echo "PRIVMSG $CHANNEL :rock"
 	sleep 0.1
-	echo "KICK $CHANNEL RockBot :I'm crazy with power!"
+	echo "KICK $CHANNEL rockbot :I'm crazy with power!"
 	sleep 0.1
-	echo "MODE $CHANNEL"
-	echo "MODE $CHANNEL +l 1"
-	echo "MODE $CHANNEL +i"
-	echo "MODE $CHANNEL +t"
-	echo "MODE $CHANNEL +k SabotagingPassword"
-	echo "MODE $CHANNEL -o $NICK"
-	echo "MODE $CHANNEL"
-	sleep 0.1
-	echo "PART $CHANNEL"
-	sleep 0.1
-	echo "PRIVMSG ServerBot ://info"
+	# echo "MODE $CHANNEL"
+	# echo "MODE $CHANNEL +l 1"
+	# echo "MODE $CHANNEL +i"
+	# echo "MODE $CHANNEL +t"
+	# # echo "MODE $CHANNEL +k SabotagingPassword"
+	# echo "MODE $CHANNEL -o $NICK"
+	# echo "MODE $CHANNEL"
+	# sleep 0.1
+	# echo "PART $CHANNEL"
+	# sleep 0.1
+	# echo "PRIVMSG ServerBot ://info"
+	echo "PRIVMSG rockbot ://rock"
+	sleep 0.1;
+	echo "PRIVMSG rockbot ://paper"
+	echo "PRIVMSG rockbot ://art"
+	echo "PRIVMSG rockbot ://rock"
 # Endof harcoded tests
 	sleep 0.1;
 	echo > /dev/tty;

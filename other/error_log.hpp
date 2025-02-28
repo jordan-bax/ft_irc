@@ -2,7 +2,7 @@
 #include <iostream>
 #include <experimental/source_location>
 
-void	log(const std::string &message,
+void	log(const std::string &message, bool ascii = false,
 		const std::experimental::source_location location =
 			std::experimental::source_location::current());
 
