@@ -48,17 +48,6 @@ void	client::write(void){
 	// this->buf_write.clear();
 }
 
-// bool client::commands(){
-// 	if (this->buf_read.length() > 6 && !this->buf_read.compare(0, 6, "LOGIN "))
-// 	{
-// 		std::string temp(this->buf_read.substr(6,this->buf_read.size()));
-// 		temp.pop_back();
-// 		this->_full_name = temp;
-// 		this->_nick_name = temp;
-// 		return false;
-// 	}
-// 	return true;
-// }
 static void print_ascii(std::string s){for (int i: s){std::cout << i << " " << static_cast<char>(i) << " ";}std::cout <<'\n';}
 
 bool	client::read(env &server_env){
@@ -83,10 +72,6 @@ bool	client::read(env &server_env){
 			if (pp.back()== '\r')
 				pp.pop_back();
 			this->buf_read = pp + '\n';
-			// std::cout << this->buf_read << ss.size()<< std::endl;
-			// print_ascii(this->buf_read);
-			// print_ascii(pp);
-			// print_ascii(ss[0]);
 			handle_client_input(server_env);
 		}
 	}

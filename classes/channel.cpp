@@ -29,6 +29,15 @@ channel & channel::operator=( channel const & rhs ) {
 	return (*this);
 }
 
+void	channel::clear(std::vector<channel*> &start){
+		while (!start.empty())
+		{
+			delete start.back();
+			start.pop_back();
+		}
+		start.shrink_to_fit();
+	}
+
 void	channel::add_client(client *client) {
 	if (client != NULL)
 		_clients.push_back(client);

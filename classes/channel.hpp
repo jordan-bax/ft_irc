@@ -28,15 +28,7 @@ public:
 
 	channel & operator=( channel const & rhs );
 
-	static void		clear(std::vector<channel*> &start)
-	{
-		while (!start.empty())
-		{
-			delete start.back();
-			start.pop_back();
-		}
-		start.shrink_to_fit();
-	};
+	static void		clear(std::vector<channel*> &start);
 
 	void	add_client(client *client);
 	void	remove_client(std::string nick_name);
