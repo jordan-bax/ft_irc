@@ -112,8 +112,10 @@ void	client::join(std::vector<std::string> input, env &server_env) {
 		std::string key = i < keys.size() ? keys[i] : "";
 		if (!channel::valid_name(channels[i]))
 			throw(client_exception(messages::Client::ERR_NOSUCHCHANNEL, {channels[i]}));
-		if (server_env.channel_exists( channels[i]))
+		if (server_env.channel_exists( channels[i])) {
 			_channels.push_back(server_env.join_channel( channels[i], this, key));
+			_channels.back()->send_mode_message(server_env, *_user, "JOIN");
+		}
 		else
 			_channels.push_back(server_env.new_channel( channels[i], this, key));
 	}

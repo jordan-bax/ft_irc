@@ -97,34 +97,20 @@ void		client::send_mode_message(env const &env, User_data const &sender, std::st
 
 void	client::receive_message(env const &env, User_data const &sender, std::string const &msg, std::string const &cmd) {
 	std::stringstream	msg_stream;
-	std::stringstream	line_stream;
-	std::string			line;
 	std::stringstream	sender_str;
 
 	sender_str << sender.get_nickname() << "!~" << sender.get_username() << "@" << env.get_hostname();
-	msg_stream << msg;
-	while (std::getline(msg_stream, line))
-	{
-		line_stream.str("");
-		line_stream << ":" << sender_str.str() << " " << cmd << " " << get_nick() << " :" << line << "\r\n";
-		buf_write += line_stream.str();
-	}
+	msg_stream << ":" << sender_str.str() << " " << cmd << " " << get_nick() << " :" << msg << "\r\n";
+	buf_write += msg_stream.str();
 }
 
 void		client::recieve_channel_message(env const &env, User_data const &sender, std::string const &channel, std::string const &msg) {
 	std::stringstream	msg_stream;
-	std::stringstream	line_stream;
-	std::string			line;
 	std::stringstream	sender_str;
 
 	sender_str << sender.get_nickname() << "!~" << sender.get_username() << "@" << env.get_hostname();
-	msg_stream << msg;
-	while (std::getline(msg_stream, line))
-	{
-		line_stream.str("");
-		line_stream << ":" << sender_str.str() << " PRIVMSG " << channel << " :" << line << "\r\n";
-		buf_write += line_stream.str();
-	}
+	msg_stream << ":" << sender_str.str() << " PRIVMSG " << channel << " :" << msg << "\r\n";
+	buf_write += msg_stream.str();
 }
 
 void	client::help_message(env &env) {
