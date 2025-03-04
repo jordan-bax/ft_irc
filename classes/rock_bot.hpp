@@ -5,11 +5,11 @@
 class rock_bot : public client 
 {
 private:
-	bool 	_art;
+	bool 	_art = false;
 	env		*_server_info;
+	rock_bot();
 
 public:
-	rock_bot();
 	rock_bot( env &e );
 	rock_bot( rock_bot const & src );
 	~rock_bot();

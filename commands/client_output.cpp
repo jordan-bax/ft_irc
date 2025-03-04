@@ -86,42 +86,43 @@ void	client::send_numeric_reply(env &env, messages::Client code, std::string con
 	buf_write += ss.str();
 }
 
-void	client::send_outgoing_message(env &env, messages::Client code, std::string const &msg, std::vector<std::string> params, std::string cmd) {
-	std::string			full_msg = build_reply_message(code, msg, params);
-	std::string			nick_name = _user == NULL ? "*" : _user->get_nickname();
-	std::string			name = _user == NULL ? "*" : _user->get_username();
-	std::stringstream	ss;
+void		client::send_mode_message(env const &env, User_data const &sender, std::string const &channel, std::string const &cmd, std::string const &msg) {
+	std::stringstream	msg_stream;
+	std::stringstream	sender_stream;
 
-	for (auto aa:params )
-		std::cout << aa << std::endl;
-	ss << ":" << nick_name << "!" << name << "@" << _address << " " << cmd << " " << full_msg << "\r\n";
-	buf_write += ss.str();
+	sender_stream << sender.get_nickname() << "!~" << sender.get_username() << "@" << env.get_hostname();
+	msg_stream << ":" << sender_stream.str() << " " << cmd << " " << channel << " " << msg << "\r\n";
+	buf_write += msg_stream.str();
 }
 
-void	client::receive_message(std::string const &sender, std::string const &msg) {
+void	client::receive_message(env const &env, User_data const &sender, std::string const &msg, std::string const &cmd) {
 	std::stringstream	msg_stream;
 	std::stringstream	line_stream;
 	std::string			line;
+	std::stringstream	sender_str;
 
+	sender_str << sender.get_nickname() << "!~" << sender.get_username() << "@" << env.get_hostname();
 	msg_stream << msg;
 	while (std::getline(msg_stream, line))
 	{
 		line_stream.str("");
-		line_stream << ":" << sender << " PRIVMSG " << get_nick() << " :" << line << "\r\n";
+		line_stream << ":" << sender_str.str() << " " << cmd << " " << get_nick() << " :" << line << "\r\n";
 		buf_write += line_stream.str();
 	}
 }
 
-void		client::recieve_channel_message(std::string const &sender, std::string const &channel, std::string const &msg) {
+void		client::recieve_channel_message(env const &env, User_data const &sender, std::string const &channel, std::string const &msg) {
 	std::stringstream	msg_stream;
 	std::stringstream	line_stream;
 	std::string			line;
+	std::stringstream	sender_str;
 
+	sender_str << sender.get_nickname() << "!~" << sender.get_username() << "@" << env.get_hostname();
 	msg_stream << msg;
 	while (std::getline(msg_stream, line))
 	{
 		line_stream.str("");
-		line_stream << ":" << sender << " PRIVMSG " << channel << " :" << line << "\r\n";
+		line_stream << ":" << sender_str.str() << " PRIVMSG " << channel << " :" << line << "\r\n";
 		buf_write += line_stream.str();
 	}
 }

@@ -38,6 +38,12 @@ protected:
 	void	mode(std::vector<std::string> input, env &server_env);
 	void	list(std::vector<std::string> input, env &server_env);
 
+	void	handle_i(env const &server_env, std::vector<std::string> input, channel *chan);
+	void	handle_t(env const &server_env, std::vector<std::string> input, channel *chan);
+	void	handle_k(env const &server_env, std::vector<std::string> input, channel *chan);
+	void	handle_o(env const &server_env, std::vector<std::string> input, channel *chan);
+	void	handle_l(env const &server_env, std::vector<std::string> input, channel *chan);
+
 	void	send_usrmsg(std::string const &target, std::string const &msg, env &server_env);
 	void	send_chanmsg(std::string const &target, std::string const &msg, env &server_env);
 	client();
@@ -50,17 +56,20 @@ public:
 	using FunctionPtr = void (client::*)(std::vector<std::string>, env&);
 	static const std::unordered_map<std::string, FunctionPtr> functionMap;
 
+	using ModePtr = void (client::*)(env const &, std::vector<std::string>, channel *);
+	static const std::unordered_map<char, ModePtr> mode_handlers;
+
 	// client & operator=( client const & rhs );
 	virtual void	write(void);
 	virtual bool	read(env &server_env);
 
 	std::string	build_reply_message(messages::Client code, std::string const &msg, std::vector<std::string> params);
 	std::string	reply_message(client_exception const &e);
-	void		send_outgoing_message(env &env, messages::Client code, std::string const &msg, std::vector<std::string> params, std::string cmd);
+	void		send_mode_message(env const &env, User_data const &sender, std::string const &channel, std::string const &cmd, std::string const &msg = "");
 	void		send_numeric_reply(env &env, client_exception const &e);
 	void		send_numeric_reply(env &env, messages::Client code, std::string const &msg, std::vector<std::string> params = {});
-	void		receive_message(std::string const &sender, std::string const &msg);
-	void		recieve_channel_message(std::string const &sender, std::string const &channel, std::string const &msg);
+	void		receive_message(env const &env, User_data const &sender, std::string const &msg, std::string const &cmd);
+	void		recieve_channel_message(env const &env, User_data const &sender, std::string const &channel, std::string const &msg);
 	void		help_message(env &env);
 	void		login_messages(env &env);
 

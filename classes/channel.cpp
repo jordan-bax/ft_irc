@@ -44,6 +44,7 @@ void	channel::add_client(client *client) {
 }
 
 void	channel::remove_client(std::string nick_name) {
+	remove_invite(nick_name);
 	for (int i = 0; i < _clients.size(); i++) {
 		if (_clients[i]->get_nick() == nick_name)
 			_clients.erase(_clients.begin() + i);
@@ -100,10 +101,16 @@ bool const	channel::is_full() const {
 	return (false);
 }
 
-void	channel::send_message(std::string const &sender, std::string const &sender_nick, std::string const &msg) {
+void	channel::send_message(env const &env, User_data const &sender, std::string const &sender_nick, std::string const &msg) {
 	for (auto *client: _clients) {
 		if (client->get_nick() != sender_nick)
-			client->recieve_channel_message(sender, _name, msg);
+			client->recieve_channel_message(env, sender, _name, msg);
+	}
+}
+
+void	channel::send_mode_message(env const &env, User_data const &sender, std::string const &cmd, std::string const &msg) {
+	for (auto *client: _clients) {
+		client->send_mode_message(env, sender, get_name(), cmd, msg);
 	}
 }
 

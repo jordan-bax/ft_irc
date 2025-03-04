@@ -22,10 +22,7 @@ void	client::send_usrmsg(std::string const &target, std::string const &msg, env 
 
 	if (!(target_client = server_env.search_client_nick( target)))
 		throw(client_exception(messages::Client::ERR_NOSUCHNICK, {target}));
-	std::stringstream	sender;
-
-	sender << get_nick() << "!~" << get_usrname() << "@" << server_env.get_hostname();
-	target_client->receive_message(sender.str(), msg);
+	target_client->receive_message(server_env, *_user, msg, "PRIVMSG");
 }
 
 void	client::send_chanmsg(std::string const &target, std::string const &msg, env &server_env) {
@@ -35,10 +32,7 @@ void	client::send_chanmsg(std::string const &target, std::string const &msg, env
 		throw(client_exception(messages::Client::ERR_NOSUCHCHANNEL, {target}));
 	if (!target_channel->user_in_channel(get_nick()))
 		throw(client_exception(messages::Client::ERR_NOTONCHANNEL, {target}));
-	std::stringstream	sender;
-
-	sender << get_nick() << "!~" << get_usrname() << "@" << server_env.get_hostname();
-	target_channel->send_message(sender.str(), get_nick(), msg);
+	target_channel->send_message(server_env, *_user, get_nick(), msg);
 }
 
 void	client::privmsg(std::vector<std::string> input, env &server_env) {
@@ -207,25 +201,32 @@ void	client::invite(std::vector<std::string> input, env &server_env) {
 		throw(client_exception(messages::Client::ERR_USERONCHANNEL, {client->get_nick(), channel->get_name()}));
 	channel->add_invite(input[1]);
 	send_numeric_reply(server_env, messages::Client::RPL_INVITING, "", {get_nick(), client->get_nick(), channel->get_name()});
-	// client->send_numeric_reply(server_env, messages::Client::RPL_INVITING, "", {get_nick(), client->get_nick(), channel->get_name()});
-	client->send_outgoing_message(server_env, messages::Client::RPL_INVITING, "", {get_nick(), client->get_nick(), channel->get_name()}, "INVITE");
+	client->receive_message(server_env, *_user, channel->get_name(), "INVITE");
 }
 
-void	handle_i(std::vector<std::string> input, channel *chan) {
-	if (input[2][0] == '-')
+void	client::handle_i(env const &server_env, std::vector<std::string> input, channel *chan) {
+	if (input[2][0] == '-') {
 		chan->set_invonly(false);
-	else
+		chan->send_mode_message(server_env, *_user, "MODE", "-i");
+	}
+	else {
 		chan->set_invonly(true);
+		chan->send_mode_message(server_env, *_user, "MODE", "+i");
+	}
 }
 
-void	handle_t(std::vector<std::string> input, channel *chan) {
-	if (input[2][0] == '-')
+void	client::handle_t(env const &server_env, std::vector<std::string> input, channel *chan) {
+	if (input[2][0] == '-') {
 		chan->set_topic_permission(false);
-	else
+		chan->send_mode_message(server_env, *_user, "MODE", "-t");
+	}
+	else {
 		chan->set_topic_permission(true);
+		chan->send_mode_message(server_env, *_user, "MODE", "+t");
+	}
 }
 
-void	handle_k(std::vector<std::string> input, channel *chan) {
+void	client::handle_k(env const &server_env, std::vector<std::string> input, channel *chan) {
 	if (input[2][0] == '-' && chan->check_key(""))
 		return ;
 	if (input.size() < 4)
@@ -234,12 +235,14 @@ void	handle_k(std::vector<std::string> input, channel *chan) {
 		if (!chan->check_key(input[3]))
 			throw(client_exception(messages::Client::ERR_BADCHANNELKEY, {chan->get_name()}));
 		chan->set_key("");
+		chan->send_mode_message(server_env, *_user, "MODE", "-k");
 		return ;
 	}
 	chan->set_key(input[3]);
+	chan->send_mode_message(server_env, *_user, "MODE", "+k " + input[3]);
 }
 
-void	handle_o(std::vector<std::string> input, channel *chan) {
+void	client::handle_o(env const &server_env, std::vector<std::string> input, channel *chan) {
 	if (input.size() < 4)
 		throw(client_exception(messages::Client::ERR_NEEDMOREPARAMS, {input[2]}));
 	if (!chan->user_in_channel(input[3]))
@@ -249,14 +252,17 @@ void	handle_o(std::vector<std::string> input, channel *chan) {
 		if (!chan->user_is_operator(input[3]))
 			return ;
 		chan->remove_operator(input[3]);
+		chan->send_mode_message(server_env, *_user, "MODE", "-o " + input[3]);
 		return ;
 	}
 	chan->add_operator(input[3]);
+	chan->send_mode_message(server_env, *_user, "MODE", "+o " + input[3]);
 }
 
-void	handle_l(std::vector<std::string> input, channel *chan) {
+void	client::handle_l(env const &server_env, std::vector<std::string> input, channel *chan) {
 	if (input[2][0] == '-') {
 		chan->set_limit(0);
+		chan->send_mode_message(server_env, *_user, "MODE", "-l");
 		return ;
 	}
 	if (input.size() != 4)
@@ -272,7 +278,16 @@ void	handle_l(std::vector<std::string> input, channel *chan) {
         throw(client_exception(messages::Client::ERR_NEEDMOREPARAMS, {input[2]}));
     }
 	chan->set_limit(static_cast<unsigned int>(new_value));
+	chan->send_mode_message(server_env, *_user, "MODE", "+l " + input[3]);
 }
+
+const std::unordered_map<char, client::ModePtr> client::mode_handlers = {
+        {'i', &client::handle_i},
+        {'t', &client::handle_t},
+        {'k', &client::handle_k},
+        {'o', &client::handle_o},
+        {'l', &client::handle_l}
+    };
 
 // TODO: add messages to confirm changes to modes
 void	client::mode(std::vector<std::string> input, env &server_env) {
@@ -290,20 +305,12 @@ void	client::mode(std::vector<std::string> input, env &server_env) {
 		throw(client_exception(messages::Client::ERR_UNKNOWNMODE, {input[2], target_channel->get_name()}));
 	if (input[2][0] != '-' && input[2][0] != '+')
 		throw(client_exception(messages::Client::ERR_UMODEUNKNOWNFLAG));
-	
-	std::unordered_map<char, std::function<void(std::vector<std::string>, channel *)>> mode_handlers = {
-        {'i', handle_i},
-        {'t', handle_t},
-        {'k', handle_k},
-        {'o', handle_o},
-        {'l', handle_l}
-    };
 
 	char	mode_char = input[2][1];
 	auto	it = mode_handlers.find(mode_char);
 	if (it == mode_handlers.end())
 		throw(client_exception(messages::Client::ERR_UNKNOWNMODE, {input[2], target_channel->get_name()}));
-	it->second(input, target_channel);
+	(this->*(it->second))(server_env, input, target_channel);
 }
 
 void	client::list(std::vector<std::string> input, env &server_env) {

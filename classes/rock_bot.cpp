@@ -53,7 +53,7 @@ static std::string	get_send_location(std::string buf){
 	size_t		pos = buf.find('#');
 	if (pos == std::string::npos){
 		pos = min(buf.find('!'), buf.find(' '));
-		target = buf.substr(1,pos);
+		target = buf.substr(1,pos -1);
 		return target;
 	}
 	target = buf.substr(pos,buf.find(' ', pos));
