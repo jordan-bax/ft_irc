@@ -29,5 +29,3 @@ public:
 	User_data & operator=( User_data const & rhs );
 
 };
-
-// std::ostream & operator<<( std::ostream & o, User_data const & rhs);

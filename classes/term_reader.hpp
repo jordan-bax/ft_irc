@@ -17,5 +17,3 @@ public:
 	bool	read(env &server_env);
 	
 };
-
-std::ostream & operator<<( std::ostream & o, term_reader const & rhs);

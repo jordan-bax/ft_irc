@@ -40,6 +40,7 @@ public:
 	std::string	get_pass() const;
 	std::string	get_hostname() const;
 	int			get_port() const;
+	int			get_maxfd() const;
 	std::string	get_date() const;
 	std::vector<connection*>&	get_connections();
 	std::vector<channel*>&		get_channels();

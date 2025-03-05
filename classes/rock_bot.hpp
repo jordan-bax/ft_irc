@@ -5,9 +5,11 @@
 class rock_bot : public client 
 {
 private:
-	bool 	_art = false;
+	bool 	_art;
 	env		*_server_info;
 	rock_bot();
+	bool 	try_send(void);
+	bool	join(std::string buf);
 
 public:
 	rock_bot( env &e );
@@ -20,4 +22,3 @@ public:
 
 };
 
-std::ostream & operator<<( std::ostream & o, rock_bot const & rhs);

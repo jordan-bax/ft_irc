@@ -3,7 +3,6 @@
 #include "../classes/channel.hpp"
 #include "../Messages.hpp"
 #include "../classes/client_exception.hpp"
-#include "temporary.hpp"
 #include <sstream>
 #include <algorithm>
 #include <map>

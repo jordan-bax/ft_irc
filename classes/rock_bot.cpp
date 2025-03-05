@@ -2,7 +2,9 @@
 #include "../mycolor.hpp"
 #include "../other/error_log.hpp"
 #include "../headers/hand_sign.hpp"
+#include "server_exception.hpp"
 #include <cstring>
+#include <algorithm>
 
 rock_bot::rock_bot(): client(FD_CLIENT, 0,"0",0) {
 	std::cout << "new rockbot [" << _fd << "]"<< std::endl;
@@ -19,6 +21,7 @@ rock_bot::rock_bot( env &e ) : client(FD_CLIENT, 1,"0",0){
 	_user->set_username("RockBot");
 	_authorised=true;
 	_server_info = &e;
+	_art = false;
 }
 rock_bot::rock_bot( rock_bot const & src ) : client(FD_CLIENT, 0,"0",0){
 	std::cout << "new client [" << _fd << "]"<< std::endl;
@@ -47,17 +50,23 @@ static std::string	get_line(std::string &tekst, char c) {
 static size_t min(size_t a, size_t b){
 	return (a<b)? a:b;
 }
-static std::string	get_send_location(std::string buf){
-	
-	std::string target;
-	size_t		pos = buf.find('#');
-	if (pos == std::string::npos){
-		pos = min(buf.find('!'), buf.find(' '));
-		target = buf.substr(1,pos -1);
-		return target;
-	}
-	target = buf.substr(pos,buf.find(' ', pos));
-	return target;
+static std::string get_send_location(std::string buf) {
+    std::string target;
+    size_t pos = buf.find('#');
+    if (pos == std::string::npos) {
+        pos = min(buf.find('!'), buf.find(' '));
+        if (pos == std::string::npos) {
+            return ""; // Return empty string if no valid position is found
+        }
+        target = buf.substr(1, pos - 1);
+        return target;
+    }
+    size_t end_pos = buf.find_first_of(" :\t\n\0", pos);
+    if (end_pos == std::string::npos) {
+        end_pos = buf.length();
+    }
+    target = buf.substr(pos, end_pos - pos);
+    return target;
 }
 
 static int	get_play(std::string buf, bool art = false){
@@ -103,10 +112,55 @@ static std::string who_wins(int player , int bot){
 		return FG_GREEN"you WON!!" FG_DEFAULT;
 	return FG_RED"you LOSE!!" FG_DEFAULT;
 }
+
+bool	rock_bot::join(std::string buf){
+	std::string line = "JOIN " + get_send_location(buf);
+	buf_read = line ;//+ "rock bot can not join the channel\n";
+	if (try_send())
+	{
+		buf_read.clear();
+		return true;
+	}
+	size_t pos = min(buf.find('!'), buf.find(' '));
+	if (pos == std::string::npos || pos == 0) 
+	{
+		std::cerr << "Invalid position in buffer" << std::endl;
+		return false;
+	}
+	std::string target = buf.substr(1,pos -1);
+	line = "PRIVMSG " + target + " :";
+	buf_read = line + "rock bot can not join the channel\n";
+	try_send();
+	buf_read.clear();
+	buf.clear();
+	return false;
+}
+bool	rock_bot::try_send(void){
+	try {
+		handle_client_input(*this->_server_info);
+	}
+	catch(const server_exception& e) {
+		std::cout << e.what();
+		return false;
+	}
+	catch(const client_exception& e) {
+		send_numeric_reply(*this->_server_info, e);
+		return false;
+	}
+	return true;
+}
+static void remove_char(std::string &str, char c) {
+	str.erase(std::remove(str.begin(), str.end(), c), str.end());
+}
+
 void	rock_bot::write(void){
-	std::string buf= get_line(buf_write,'\n');
-	log(buf);
-	// if (buf.find("INVITE") == std::string::npos)
+	std::string buf = get_line(buf_write,'\n');
+	remove_char(buf, '\r');
+	if (buf.find("INVITE") != std::string::npos)
+	{
+		join(buf);
+		return;
+	}
 	if (buf.find("PRIVMSG") == std::string::npos)
 	{
 		buf.clear();
@@ -116,66 +170,32 @@ void	rock_bot::write(void){
 	int player = get_play(buf);
 	int bot = random_handSign();
 	if (player < 0){
-		_art = true;
-		buf_read = line + "rock bot will use ascii art\n";
+		if (_art == true){
+			_art = false;
+			buf_read = line + "rock bot will not use ascii art\n";
+		}
+		else{
+			_art = true;
+			buf_read = line + "rock bot will use ascii art\n";
+		}
+
 	}
 	else if (player > 2)
 		buf_read = line + "rock bot does not know\n";
 	else{
 
 		buf_read = line + "you played \n" + get_handSign(player, _art);
-		handle_client_input(*this->_server_info);
+		try_send();
 		buf_read = line + "rockbot played \n" + get_handSign(bot, _art);
-		handle_client_input(*this->_server_info);
+		try_send();
 		buf_read = line + who_wins(player, bot) + "\n";
-		
 	}
-	handle_client_input(*this->_server_info);
+	try_send();
 	buf_read.clear();
 	buf.clear();
 	// this->buf_write.clear();
 }
-/*
-PASS password
-NICK jor
-USER jor  * *: roro
-PRIVMSG Rockbot : hoi
-*/
-bool	rock_bot::read(env &server_env){
-	// int		i;
-	// int		r;
-	// char	buf_read[BUF_SIZE + 1];
 
-	// r = recv(this->_fd, buf_read, BUF_SIZE, 0);
-	// if (r <= 0)
-	// {
-	// 	std::cout << "client #" << this->_fd << "gone away"<< std::endl;
-	// 	close(this->_fd);
-	// 	return false;
-	// }
-	// buf_read[r] = '\0';
-	// std::cout << "get read" <<" > "<< buf_read << " read\n";
-	// this->buf_read = buf_read;
-	// try {
-	// 	std::vector<std::string> ss = this->split(this->buf_read, '\n');
-	// 	for (auto pp : ss)
-	// 	{
-	// 		if (pp.back()== '\r')
-	// 			pp.pop_back();
-	// 		this->buf_read = pp + '\n';
-	// 		std::cout << this->buf_read << ss.size()<< std::endl;
-	// 		// print_ascii(this->buf_read);
-	// 		// print_ascii(pp);
-	// 		// print_ascii(ss[0]);
-	// 		handle_client_input(server_env);
-	// 	}
-	// }
-	// catch(const server_exception& e) {
-	// 	std::cout << e.what();
-	// }
-	// catch(const client_exception& e) {
-	// 	send_numeric_reply(server_env, e);
-	// }
-	
+bool	rock_bot::read(env &server_env){
 	return true;
 }

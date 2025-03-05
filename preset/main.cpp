@@ -2,6 +2,7 @@
 #include "../other/signal.hpp"
 #include "../other/error_log.hpp"
 #include "../classes/connection.hpp"
+#include "../mycolor.hpp"
 
 int main(int argc, char const *argv[])
 {
@@ -16,8 +17,9 @@ int main(int argc, char const *argv[])
 		return 1;
 	init_signalHandling();
 	log("hoi");
-	std::cout << "server is now listening to port "<< e.get_port() << " pass "<< e.get_pass()
-		<<" and host "<< e.get_hostname() << "\nCreated on date " << e.get_date()<<  std::endl;
+	std::cout << FG_GREEN"server is now listening to port "<< e.get_port() << " pass "<< e.get_pass()
+		<<" and host "<< e.get_hostname() << "\nCreated on date " << e.get_date() \
+		<< "with a max number of " << FD_SETSIZE<< FG_DEFAULT<<  std::endl;
 	while (g_saveQuit)
 	{
 		e.init_fd();

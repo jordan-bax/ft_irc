@@ -138,6 +138,9 @@ std::string	env::get_pass() const{
 int			env::get_port() const{
 	return this->_port;
 }
+int			env::get_maxfd() const{
+	return this->_maxfd;
+}
 std::string	env::get_date() const {
 	return this->_date;
 }

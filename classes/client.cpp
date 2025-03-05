@@ -65,22 +65,32 @@ bool	client::read(env &server_env){
 	buf_read[r] = '\0';
 	std::cout << "get read" <<" > "<< buf_read << " read\n";
 	this->buf_read = buf_read;
-	try {
-		std::vector<std::string> ss = this->split(this->buf_read, '\n');
-		for (auto pp : ss)
-		{
-			if (pp.back()== '\r')
-				pp.pop_back();
-			this->buf_read = pp + '\n';
+	std::vector<std::string> ss = this->split(this->buf_read, '\n');
+	for (auto pp : ss)
+	{
+		if (pp.back()== '\r')
+			pp.pop_back();
+		this->buf_read = pp + '\n';
+		try {
 			handle_client_input(server_env);
 		}
-	}
-	catch(const server_exception& e) {
-		std::cout << e.what();
-	}
-	catch(const client_exception& e) {
-		send_numeric_reply(server_env, e);
+		catch(const server_exception& e) {
+			std::cout << e.what();
+		}
+		catch(const client_exception& e) {
+			send_numeric_reply(server_env, e);
+		}
 	}
 	
 	return true;
+}
+
+std::string	const &client::get_nick() const {
+	return (_user->get_nickname());
+}
+std::string const &client::get_usrname() const {
+	return (_user->get_username());
+}
+bool	client::is_registered() const {
+	return (_user != NULL);
 }

@@ -31,3 +31,5 @@ Help messages needs to be numeric reply
 
 direct tekst :<server hostname> <numRPL> <cmd> :<error-tekst>
 normal tekst :<nick>!~<name>@<client hostname / ip> <command> :<tekst>
+
+test lots

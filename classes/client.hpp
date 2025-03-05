@@ -8,6 +8,7 @@
 
 // #define SERVER_PASS "password"
 #define MAX_CHANNELS 5
+class channel;
 
 class client : public connection
 {
@@ -50,7 +51,6 @@ protected:
 public:
 	client( int type , int fd );
 	client( int type , int fd , std::string addr, uint16_t port);
-	// client( client const & src );
 	virtual ~client();
 
 	using FunctionPtr = void (client::*)(std::vector<std::string>, env&);
@@ -59,7 +59,6 @@ public:
 	using ModePtr = void (client::*)(env const &, std::vector<std::string>, channel *);
 	static const std::unordered_map<char, ModePtr> mode_handlers;
 
-	// client & operator=( client const & rhs );
 	virtual void	write(void);
 	virtual bool	read(env &server_env);
 
@@ -73,11 +72,9 @@ public:
 	void		help_message(env &env);
 	void		login_messages(env &env);
 
-	std::string	const &get_nick() const {return (_user->get_nickname());}
-	std::string const &get_usrname() const {return (_user->get_username());}
-	bool	is_registered() const { return (_user != NULL); }
+	std::string	const &get_nick() const;
+	std::string const &get_usrname() const;
+	bool	is_registered() const;
 
 	static std::vector<std::string>	split(std::string const &str, char delimiter);
 };
-
-// std::ostream & operator<<( std::ostream & o, client const & rhs);

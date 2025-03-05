@@ -8,7 +8,7 @@ CLASSES+= connection client server term_reader env error_log rock_bot
 
 
 SRC= client_input.cpp client_output.cpp client_commands.cpp \
-	Messages.cpp temporary.cpp channel.cpp
+	Messages.cpp channel.cpp
 
 SRC+= main.cpp #x.cpp \
 	# init_env.cpp clean_fd.cpp get_opt.cpp main_loop.cpp \
@@ -27,7 +27,8 @@ CC= c++
 
 val = -ggdb3
 VALOPT = --leak-check=full
-VALOPT += --show-leak-kinds=all
+# VALOPT += --show-leak-kinds=all
+VALOPT += -s
 CPPFLAGS +=	-Wall -Werror -Wextra
 CPPFLAGS += -g $(val)
 PORT= 8000
