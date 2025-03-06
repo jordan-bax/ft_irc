@@ -1,5 +1,5 @@
 
-VPATH= preset : classes : other : commands
+VPATH= HEADER:SRC
 
 NAME= irc_server
 
@@ -65,6 +65,5 @@ r:$(NAME)
 re:
 	@$(MAKE) fclean
 	@$(MAKE) all
-
 
 .PHONY: all re fclean clean f r v

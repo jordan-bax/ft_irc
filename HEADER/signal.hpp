@@ -1,5 +1,5 @@
 #pragma once
-#include "../preset/bircd.h"
+
 extern bool g_saveQuit;
 // inisiate the signal quit and interupt to set saveQuit to false
 // so we can savely quit and close all the fds in the main loop that has the data

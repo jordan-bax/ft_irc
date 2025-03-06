@@ -1,19 +1,19 @@
-#include "env.hpp"
 #include <sys/resource.h>
 #include <unistd.h>
-#include "server_exception.hpp"
 #include <stdlib.h>
 #include <netdb.h>
 #include <netinet/in.h>
-#include "../classes/server.hpp"
-#include "../classes/term_reader.hpp"
-#include "../classes/client_exception.hpp"
-#include "../Messages.hpp"
-#include "client.hpp"
-#include "channel.hpp"
 #include <chrono>
-#include "../other/error_log.hpp"
-#include "rock_bot.hpp"
+#include "../HEADER/env.hpp"
+#include "../HEADER/server_exception.hpp"
+#include "../HEADER/server.hpp"
+#include "../HEADER/term_reader.hpp"
+#include "../HEADER/client_exception.hpp"
+#include "../HEADER/Messages.hpp"
+#include "../HEADER/client.hpp"
+#include "../HEADER/channel.hpp"
+#include "../HEADER/error_log.hpp"
+#include "../HEADER/rock_bot.hpp"
 
 env::env() {
 	time_t date = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());

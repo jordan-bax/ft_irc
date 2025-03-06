@@ -1,5 +1,5 @@
 #include <iostream>
-#include "../mycolor.hpp"
+#include "../HEADER/mycolor.hpp"
 #include <experimental/source_location>
 
 static void print_ascii(std::string s){for (int i: s){std::cout << i << " " << static_cast<char>(i) << " ";}std::cout <<'\n';}

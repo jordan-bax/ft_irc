@@ -1,7 +1,7 @@
-#include "channel.hpp"
+#include "../HEADER/channel.hpp"
 #include <algorithm>
 #include <iostream>
-#include "client.hpp"
+#include "../HEADER/client.hpp"
 
 channel::channel() {}
 

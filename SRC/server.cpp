@@ -1,9 +1,8 @@
-#include "server.hpp"
-#include "client.hpp"
+#include "../HEADER/server.hpp"
+#include "../HEADER/client.hpp"
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include "../preset/bircd.h"
-#include "../other/error_log.hpp"
+#include "../HEADER/error_log.hpp"
 
 server::server() {
 	

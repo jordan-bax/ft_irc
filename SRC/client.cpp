@@ -1,6 +1,6 @@
-#include "client.hpp"
-#include "client_exception.hpp"
-#include "server_exception.hpp"
+#include "../HEADER/client.hpp"
+#include "../HEADER/client_exception.hpp"
+#include "../HEADER/server_exception.hpp"
 #include <sys/socket.h>
 #include <unistd.h>
 

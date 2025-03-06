@@ -1,10 +1,10 @@
 #pragma once
 #include "connection.hpp"
-#include "../Messages.hpp"
+#include "Messages.hpp"
 #include "client_exception.hpp"
 #include <unordered_map>
 #include "env.hpp"
-#include "../classes/User_data.hpp"
+#include "User_data.hpp"
 
 // #define SERVER_PASS "password"
 #define MAX_CHANNELS 5

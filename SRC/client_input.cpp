@@ -1,11 +1,11 @@
 
-#include "../classes/client.hpp"
-#include "../classes/client_exception.hpp"
-#include "../Messages.hpp"
+#include "../HEADER/client.hpp"
+#include "../HEADER/client_exception.hpp"
+#include "../HEADER/Messages.hpp"
 #include <iostream>
 #include <sstream>
 #include <iterator>
-#include "../other/error_log.hpp"
+#include "../HEADER/error_log.hpp"
 
 std::vector<std::string>	client::split(std::string const &str, char delimiter) {
 	std::vector<std::string>	result;

@@ -1,6 +1,6 @@
-#include "term_reader.hpp"
+#include "../HEADER/term_reader.hpp"
 #include <sys/socket.h>
-#include "env.hpp"
+#include "../HEADER/env.hpp"
 
 term_reader::term_reader() {
 	

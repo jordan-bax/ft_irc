@@ -1,8 +1,8 @@
 
-#include "../classes/client.hpp"
-#include "../classes/channel.hpp"
-#include "../Messages.hpp"
-#include "../classes/client_exception.hpp"
+#include "../HEADER/client.hpp"
+#include "../HEADER/channel.hpp"
+#include "../HEADER/Messages.hpp"
+#include "../HEADER/client_exception.hpp"
 #include <sstream>
 #include <algorithm>
 #include <map>

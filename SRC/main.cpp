@@ -1,8 +1,8 @@
-#include "../classes/env.hpp"
-#include "../other/signal.hpp"
-#include "../other/error_log.hpp"
-#include "../classes/connection.hpp"
-#include "../mycolor.hpp"
+#include "../HEADER/env.hpp"
+#include "../HEADER/signal.hpp"
+#include "../HEADER/error_log.hpp"
+#include "../HEADER/connection.hpp"
+#include "../HEADER/mycolor.hpp"
 
 int main(int argc, char const *argv[])
 {

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <csignal>
 #include <sys/socket.h>
-#include "signal.hpp"
+#include "../HEADER/signal.hpp"
 bool g_saveQuit = true;
 
 // send end of file to client and add stdin to the fd_set

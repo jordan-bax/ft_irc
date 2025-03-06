@@ -1,8 +1,8 @@
-#include "rock_bot.hpp"
-#include "../mycolor.hpp"
-#include "../other/error_log.hpp"
-#include "../headers/hand_sign.hpp"
-#include "server_exception.hpp"
+#include "../HEADER/rock_bot.hpp"
+#include "../HEADER/mycolor.hpp"
+#include "../HEADER/error_log.hpp"
+#include "../HEADER/hand_sign.hpp"
+#include "../HEADER/server_exception.hpp"
 #include <cstring>
 #include <algorithm>
 

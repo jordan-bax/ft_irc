@@ -1,4 +1,4 @@
-#include "connection.hpp"
+#include "../HEADER/connection.hpp"
 #include <unistd.h>
 
 connection::connection() : _fd(-1), _type(-1) {}

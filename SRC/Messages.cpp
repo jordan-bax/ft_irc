@@ -1,6 +1,5 @@
-
-#include "Messages.hpp"
-#include "classes/server_exception.hpp"
+#include "../HEADER/Messages.hpp"
+#include "../HEADER/server_exception.hpp"
 #include <map>
 
 // TODO fill in all the <> params

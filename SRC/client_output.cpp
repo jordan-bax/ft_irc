@@ -1,7 +1,7 @@
 
-#include "../classes/client.hpp"
-#include "../classes/server_exception.hpp"
-#include "../Messages.hpp"
+#include "../HEADER/client.hpp"
+#include "../HEADER/server_exception.hpp"
+#include "../HEADER/Messages.hpp"
 #include <sstream>
 
 std::string	client::build_reply_message(messages::Client code, std::string const &msg, std::vector<std::string> params) {

@@ -1,7 +1,7 @@
 #ifndef CLIENT_EXCEPTION_HPP
 #define CLIENT_EXCEPTION_HPP
 
-#include "../Messages.hpp"
+#include "Messages.hpp"
 #include <stdexcept>
 #include <vector>
 
