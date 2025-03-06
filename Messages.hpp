@@ -19,23 +19,6 @@ namespace messages {
     		"TOPIC <channel> [<topic>]		:Views or changes the topic of a channel.\n"
     		"MODE <channel> <mode>		:Changes the mode of a channel or user.\n"
     		"For more detailed information, please refer to the server documentation.\n";
-
-		constexpr const char *INPUT_USAGE = "Usage: <command> [<paramaters>]\n";
-		
-		constexpr const char *ERROR_AUTH_ORDER = 
-			"\nError: Incorrect authentication order\n"
-			"Please authenticate in this order:\n"
-			"PASS <password>\n"
-			"NICK <nickname>\n"
-			"USER <username>\n"
-			"All authentication data has been reset!\n\n";
-		constexpr const char *ERROR_TOO_MANY_PAR = 
-			"Error: too many parameters\n"
-			"Use HELP to get help about a command!\n";
-		constexpr const char *ERROR_TOO_FEW_PAR = 
-			"Error: not enough parameters\n"
-			"Use HELP to get help about a command!\n";
-		constexpr const char *ERROR_PASS_ALREADY_SET = "Error: password has already been set\n";
 	}
 
 	enum Client {
@@ -87,10 +70,6 @@ namespace messages {
 		ERR_INVALIDLIMIT = 707,			// returned when entered limit contains other characters than numeric
 		RPL_TEST = 901
 	};
-
-	namespace server {
-
-	}
 }
 
 std::string	get_client_message(messages::Client numeric_reply);

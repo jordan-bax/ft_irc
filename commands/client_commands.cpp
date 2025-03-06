@@ -141,7 +141,7 @@ void	client::kick(std::vector<std::string> input, env &server_env) {
 			throw(client_exception(messages::Client::ERR_NOSUCHCHANNEL, {chan_name}));
 		if (!channel->user_in_channel(get_nick()))
 			throw(client_exception(messages::Client::ERR_NOTONCHANNEL, {chan_name}));
-		if (!channel->user_is_operator(get_nick()))
+		if (user_name != get_nick() && !channel->user_is_operator(get_nick()))
 			throw(client_exception(messages::Client::ERR_CHANOPRIVSNEEDED, {chan_name}));
 		if (!channel->user_in_channel(user_name))
 			throw(client_exception(messages::Client::ERR_USERNOTINCHANNEL, {user_name, chan_name}));
