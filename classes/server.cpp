@@ -29,6 +29,8 @@ bool	server::read(env &server_env) {
 	std::string		client_adderess;
 	uint16_t		client_port;
 
+	if (server_env.get_connections().size() >= FD_SETSIZE)
+		return true;
 	csin_len = sizeof(csin);
 	client_fd = err_int(-1, accept(this->_fd, (struct sockaddr*)&csin, &csin_len), "accept");
 	client_adderess = inet_ntoa(csin.sin_addr);
