@@ -105,12 +105,12 @@ static std::string who_wins(int player , int bot){
 	if (player == bot)
 		return "it's a draw\n";
 	if	(player == paper && bot == rock)
-		return FG_GREEN"you WON!!" FG_DEFAULT;
+		return "you WON!!" ;
 	if	(player == rock && bot == scissor)
-		return FG_GREEN"you WON!!" FG_DEFAULT;
+		return "you WON!!" ;
 	if	(player == scissor && bot == paper)
-		return FG_GREEN"you WON!!" FG_DEFAULT;
-	return FG_RED"you LOSE!!" FG_DEFAULT;
+		return "you WON!!" ;
+	return "you LOSE!!" ;
 }
 
 bool	rock_bot::join(std::string buf){

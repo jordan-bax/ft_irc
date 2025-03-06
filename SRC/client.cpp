@@ -54,6 +54,7 @@ bool	client::read(env &server_env){
 	int		i;
 	int		r;
 	char	buf_read[BUF_SIZE + 1];
+	std::string rest;
 
 	r = recv(this->_fd, buf_read, BUF_SIZE, 0);
 	if (r <= 0)
@@ -64,7 +65,15 @@ bool	client::read(env &server_env){
 	}
 	buf_read[r] = '\0';
 	std::cout << "get read" <<" > "<< buf_read << " read\n";
-	this->buf_read = buf_read;
+	this->buf_read += buf_read;
+	if (this->buf_read.find('\n') == std::string::npos)
+		return true;
+	size_t pos = this->buf_read.find_last_of('\n');
+	if (pos != this->buf_read.size() - 1){
+		rest = this->buf_read.substr(pos+1);
+		this->buf_read.erase(pos+1);
+	}
+
 	std::vector<std::string> ss = this->split(this->buf_read, '\n');
 	for (auto pp : ss)
 	{
@@ -81,7 +90,7 @@ bool	client::read(env &server_env){
 			send_numeric_reply(server_env, e);
 		}
 	}
-	
+	this->buf_read = rest;
 	return true;
 }
 
