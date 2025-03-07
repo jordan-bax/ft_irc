@@ -25,8 +25,8 @@ int		err_int(int err, int res,const std::string &message,
 	if (res == err)
 	{
 		std::cerr << FG_LRED"Error in file: "
-			<< location.file_name() << "(L "
-			<< location.line() << ":C "
+			<< location.file_name() << "("
+			<< location.line() << ":"
 			<< location.column() << ") `"
 			<< location.function_name() << "`: "
 			<< message << FG_DEFAULT << std::endl;
@@ -42,8 +42,8 @@ void	*err_void(void *err, void *res, const std::string &message,
 	if (res == err)
 	{
 		std::cerr << FG_LRED"Error in file: "
-			<< location.file_name() << "(L "
-			<< location.line() << ":C "
+			<< location.file_name() << "("
+			<< location.line() << ":"
 			<< location.column() << ") `"
 			<< location.function_name() << "`: "
 			<< message << FG_DEFAULT << std::endl;

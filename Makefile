@@ -27,7 +27,7 @@ CC= c++
 
 val = -ggdb3
 VALOPT = --leak-check=full
-# VALOPT += --show-leak-kinds=all
+VALOPT += --show-leak-kinds=all
 VALOPT += -s
 CPPFLAGS +=	-Wall -Werror -Wextra
 CPPFLAGS += -g $(val)
